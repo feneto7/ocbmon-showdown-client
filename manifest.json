@@ -1,6 +1,6 @@
 {
-  "short_name": "Showdown!",
-  "name": "Pokémon Showdown!",
+  "short_name": "OCBmon Showdown",
+  "name": "OCBmon Showdown",
   "icons": [
     {
       "src": "favicon-16.png",
@@ -23,6 +23,6 @@
       "sizes": "256x256"
     }
   ],
-  "start_url": "/?utm_source=homescreen",
+  "start_url": "/",
   "display": "standalone"
 }

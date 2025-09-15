@@ -1,27 +1,7 @@
-/* Custom CSS for Ocbmon Showdown */
-/* Add your custom styles here */
+/* Custom CSS for OCBmon Showdown */
+/* Este arquivo permite personalizações customizadas do cliente */
 
-/* Example custom styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Exemplo de customização - pode ser removido se não necessário */
+.header .logo {
+    filter: hue-rotate(120deg); /* Muda a cor do logo para verde */
 }
-
-/* Custom battle styles */
-.battle-log {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-}
-
-/* Custom chat styles */
-.chat-log {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-}
-
-/* Custom team builder styles */
-.teambuilder {
-    background-color: #f8f9fa;
-}
-
-/* Add more custom styles as needed */

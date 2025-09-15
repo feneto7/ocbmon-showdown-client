@@ -1,16 +1,128 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>OCBmon Showdown - Redirecionando...</title>
-    <meta http-equiv="refresh" content="0; url=./public/">
-    <script>
-        // Fallback para browsers que não suportam meta refresh
-        window.location.href = "./public/";
-    </script>
-</head>
-<body>
-    <p>Redirecionando para o cliente OCBmon Showdown...</p>
-    <p>Se não for redirecionado automaticamente, <a href="./public/">clique aqui</a>.</p>
-</body>
-</html>
+<!--
+           .............
+       ,...................
+     ,..................========
+    ....~=##############=======+
+   ...##################=======.
+  ..=######+...,    +##=======,..
+  ..=###### ., .....  +=====+,....
+     ###########~,..  ======
+  .....##############~=====+....., pokemonshowdown.com
+  ..........###########====......
+    ............#######,==......
+  =###.,........+#####+ .......
+  ####################~......,
+  #################+======,
+     ++++++++++++ =======+
+
+Viewing source? We're open source! Check us out on GitHub!
+https://github.com/Zarel/Pokemon-Showdown
+https://github.com/Zarel/Pokemon-Showdown-Client (you are here)
+
+Also visit us in the Dev chatroom:
+https://psim.us/dev
+
+-->
+<meta charset="UTF-8" />
+<meta id="viewport" name="viewport" content="width=device-width" />
+<title>Showdown!</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<link rel="shortcut icon" href="./favicon.ico" id="dynamic-favicon" />
+<link rel="icon" sizes="128x128" href="./favicon-128.png" />
+<link rel="stylesheet" href="./style/battle.css?84e34d2a" />
+<link rel="stylesheet" href="./style/client.css?9299019d" />
+<link rel="stylesheet" href="./style/sim-types.css?0d738788" />
+<link rel="stylesheet" href="./style/utilichart.css?5620b4e3" />
+<link rel="stylesheet" href="./style/font-awesome.css?95545b00" />
+<link rel="stylesheet" href="./custom.css" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="google-signin-client_id" content="">
+<!--[if lte IE 8]><script>document.location.replace('http://pokemonshowdown.com/autodownload/win');</script><![endif]-->
+
+<!-- head custom -->
+
+<div id="header" class="header">
+	<img class="logo" src="./pokemonshowdownbeta.png" srcset="./pokemonshowdownbeta@2x.png 2x" alt="OCBmon Showdown! (beta)" width="146" height="44" /><div class="maintabbarbottom"></div>
+</div>
+<div class="ps-room scrollable" id="mainmenu"><div class="mainmenuwrapper">
+	<div class="leftmenu">
+		<div class="activitymenu">
+			<div class="pmbox">
+			</div>
+		</div>
+		<div class="mainmenu">
+			<div id="loading-message" class="mainmessage">Initializing... <noscript>FAILED<br /><br />Pok&eacute;mon Showdown requires JavaScript.</noscript></div>
+		</div>
+	</div>
+	<div class="rightmenu">
+	</div>
+	<div class="mainmenufooter">
+		<div class="bgcredit"></div>
+		<small><a href="//clover.weedl.es/replays/" target="_blank">Replays</a> | <a href="//calc.weedl.es/" target="_blank">Calc</a></small>
+	</div>
+</div></div>
+<script>
+	var LM = document.getElementById('loading-message');
+	LM.innerHTML += ' DONE<br />Loading libraries...';
+</script>
+<script nomodule src="./js/lib/ps-polyfill.js"></script>
+<script src="./config/config.js?16abaaf0"></script>
+<script src="./js/lib/jquery-2.1.4.min.js"></script>
+<script src="./js/lib/jquery-cookie.js"></script>
+<script src="./js/lib/autoresize.jquery.min.js?52413642"></script>
+<script src="./js/battle-sound.js?3ca37fb3"></script>
+<script src="./js/lib/html-css-sanitizer-minified.js?38f3f7d3"></script>
+<script src="./js/lib/lodash.core.js?f87de26d"></script>
+<script src="./js/lib/backbone.js?6faf9dcf"></script>
+<script src="./js/lib/d3.v3.min.js"></script>
+<script src="./js/lib/string-template.js"></script>
+
+<script>
+	LM.innerHTML += ' DONE<br />Loading data...';
+</script>
+
+<script src="./js/battledata.js?b33ac369"></script>
+<script src="./js/storage.js?d2a62a5d"></script>
+<script src="./data/pokedex-mini.js?0.18497600966445948"></script>
+<script src="./data/typechart.js?fa14716c"></script>
+<script src="./js/battle.js?dc740a6e"></script>
+<script src="./js/lib/sockjs-1.4.0-nwjsfix.min.js"></script>
+<script src="./js/lib/color-thief.min.js"></script>
+
+<script>
+	LM.innerHTML += ' DONE<br />Loading client...';
+</script>
+
+<script src="./js/client.js?f45f6baf"></script>
+<script src="./js/client-topbar.js?5349785f"></script>
+<script src="./js/client-mainmenu.js?8a8120e0"></script>
+<script src="./js/client-teambuilder.js?b11ec15a"></script>
+<script src="./js/client-ladder.js?07314358"></script>
+<script src="./js/client-chat.js?7f09b836"></script>
+<script src="./js/client-chat-tournament.js?76ada354"></script>
+<script src="./js/battle-tooltips.js?467eee42"></script>
+<script src="./js/client-battle.js?bda0007f"></script>
+<script src="./js/client-rooms.js?89710807"></script>
+<script src="./data/graphics.js?203ae3d2"></script>
+
+<script>
+	var app = new App();
+</script>
+
+<script src="./data/pokedex.js?8b45081e"></script>
+<script src="./data/moves.js?b9f77ff3"></script>
+<script src="./data/items.js?38bfa44c"></script>
+<script src="./data/abilities.js?9b581014"></script>
+
+<script src="./data/search-index.js?82f1eecd"></script>
+<script src="./data/battle-icons.js?f2189428"></script>
+<script src="./data/teambuilder-tables.js?0eb1280c"></script>
+<script src="./js/battle-dex-search.js?2bf5ab10"></script>
+<script src="./js/search.js?e8f236d2"></script>
+
+<script src="./data/aliases.js?39e87dbe" async="async"></script>
+<!-- Mods removidos - apenas wack e gen9predlc são mantidos -->
+<script src="./data/teambuilder-table-wack.js?2700f0d9" defer="defer"></script>
+<script src="./data/teambuilder-table-gen9predlc.js?2700f0d9" defer="defer"></script>
