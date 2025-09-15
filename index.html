@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<script>
+// Redireciona para a pasta pública no GitHub Pages
+if (!/\/public\/?$/.test(location.pathname)) {
+	var target = location.href.replace(/\/?$/, '/public/');
+	location.replace(target);
+}
+</script>
 <!--
            .............
        ,...................
