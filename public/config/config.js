@@ -25,8 +25,8 @@ Config.customcolors = {
 Config.version = "0.11.2";
 
 Config.routes = {
-	root: 'feneto7.github.io/ocbmon-showdown-client',
-	client: 'feneto7.github.io/ocbmon-showdown-client',
+	root: 'feneto7.github.io/ocbmon-showdown-client/public',
+	client: 'feneto7.github.io/ocbmon-showdown-client/public',
 	clientProtocol: 'https',
 	dex: 'dex.pokemonshowdown.com',
 	replays: 'feneto7.github.io/ocbmon-showdown-client/replays',
