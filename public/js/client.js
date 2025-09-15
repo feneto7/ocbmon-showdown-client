@@ -693,8 +693,8 @@ function toId() {
 
 			Storage.whenAppLoaded.load(this);
 
-			// load custom colors from loginserver
-			$.get('/config/colors.json', {}, function (data) {
+			// load custom colors from loginserver (ajuste para GitHub Pages)
+			$.get(Dex.resourcePrefix + 'config/colors.json', {}, function (data) {
 				Object.assign(Config.customcolors, data);
 			});
 

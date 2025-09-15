@@ -216,6 +216,8 @@ if (!Storage.bg.id) {
 // places in certain cases.
 
 Storage.origin = Config.routes.clientProtocol + '://' + Config.routes.client;
+// Ajuste GitHub Pages: usa apenas o host de Config.routes.client para a origem/comparação
+var __clientHost = (Config.routes && Config.routes.client ? String(Config.routes.client).split('/')[0] : document.location.hostname);
 
 Storage.prefs = function (prop, value, save) {
 	if (value === undefined) {
@@ -358,8 +360,7 @@ Storage.initPrefs = function () {
 	$(window).on('message', Storage.onMessage);
 
 	if (document.location.hostname !== Config.routes.client) {
-		$(
-			'<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossdomain.php?host=' +
+		$('<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossdomain.php?host=' +
 			encodeURIComponent(document.location.hostname) +
 			'&path=' + encodeURIComponent(document.location.pathname.substr(1)) +
 			'&protocol=' + encodeURIComponent(document.location.protocol) +
@@ -367,13 +368,9 @@ Storage.initPrefs = function () {
 		).appendTo('body');
 	} else {
 		Config.server = Config.server || Config.defaultserver;
-		$(
-			'<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossprotocol.html?v1.2" style="display: none;"></iframe>'
+		$('<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossprotocol.html?v1.2" style="display: none;"></iframe>'
 		).appendTo('body');
 		setTimeout(function () {
-			// HTTPS may be blocked
-			// yes, this happens, blame Avast! and BitDefender and other antiviruses
-			// that feel a need to MitM HTTPS poorly
 			Storage.whenPrefsLoaded.load();
 			if (!Storage.whenTeamsLoaded.isLoaded) {
 				Storage.whenTeamsLoaded.error = 'stalled';
