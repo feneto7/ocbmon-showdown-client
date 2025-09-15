@@ -1,0 +1,52 @@
+name: Update Client from Server Changes
+
+on:
+  workflow_dispatch: # Manual trigger
+  schedule:
+    - cron: '0 */6 * * *' # Run every 6 hours
+  repository_dispatch:
+    types: [server-updated]
+
+jobs:
+  update-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout client repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Checkout server repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository_owner }}/ocbmon-showdown
+          path: server
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build client with server data
+        run: |
+          cd server
+          npm install
+          cd ../ocbmon-showdown-client
+          node build-server
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update client from server changes"
+            git push
+          fi

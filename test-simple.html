@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test GitHub Pages</title>
+</head>
+<body>
+    <h1>GitHub Pages Test</h1>
+    <p>Se você está vendo isso, o GitHub Pages está funcionando!</p>
+    <script>
+        console.log("Test script loaded successfully!");
+        // Test loading a file
+        fetch('./config.js')
+            .then(response => {
+                console.log('config.js status:', response.status);
+                if (response.ok) {
+                    console.log('config.js loaded successfully');
+                } else {
+                    console.log('config.js failed to load:', response.status);
+                }
+            })
+            .catch(error => {
+                console.log('Error loading config.js:', error);
+            });
+    </script>
+</body>
+</html>
