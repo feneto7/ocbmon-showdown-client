@@ -33,8 +33,9 @@ Config.routes = {
 	users: 'feneto7.github.io/ocbmon-showdown-client/users',
 };
 
+
 Config.defaultserver = {
-	id: 'ocbmon-showdown',
+	id: 'showdown',
 	host: 'ocbmon-showdown.onrender.com',
 	port: '443',
 	httpport: 443,
