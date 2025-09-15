@@ -38,7 +38,7 @@ Config.defaultserver = {
 	id: 'showdown',
 	host: 'ocbmon-showdown.onrender.com',
 	port: '443',
-	httpport: 443,
+	httpport: 80,
 	altport: 80,
 	registered: true,
 	https: true,

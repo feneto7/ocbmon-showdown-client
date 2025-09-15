@@ -16,9 +16,10 @@ this.connect();
 }var _proto=PSConnection.prototype;_proto.
 connect=function connect(){var _this=this;
 var server=PS.server;
-// Corrige precedência do ternário: decide a porta com base no protocolo
-var port = (server.protocol === 'https' ? ':' + server.port : ':' + server.httpport);
-var url=server.protocol+'://'+server.host+port+server.prefix;
+// Usa flag https para definir o protocolo e evitar portas incorretas
+var protocol = (server && server.https) ? 'https' : 'http';
+var port = (protocol === 'https' ? ':' + server.port : ':' + server.httpport);
+var url=protocol+'://'+server.host+port+server.prefix;
 var socket=this.socket=new SockJS(url,[],{timeout:5*60*1000});
 socket.onopen=function(){
 console.log("\u2705 (CONNECTED)");
