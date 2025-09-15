@@ -848,9 +848,10 @@ function toId() {
 						self.socket = reconstructSocket(self.socket);
 						return;
 					}
+					// Desabilita fallback para prefixo vazio; mantém '/showdown' para evitar CORS/502 em '/info'
 					if (!altprefix) {
 						altprefix = true;
-						Config.sockjsprefix = '';
+						// Config.sockjsprefix = '';
 						self.socket = reconstructSocket(self.socket);
 						return;
 					}
