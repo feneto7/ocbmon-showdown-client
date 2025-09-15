@@ -215,9 +215,9 @@ if (!Storage.bg.id) {
 // localStorage is banned, and since prefs are cached in other
 // places in certain cases.
 
-Storage.origin = Config.routes.clientProtocol + '://' + Config.routes.client;
-// Ajuste GitHub Pages: usa apenas o host de Config.routes.client para a origem/comparação
 var __clientHost = (Config.routes && Config.routes.client ? String(Config.routes.client).split('/')[0] : document.location.hostname);
+Storage.origin = Config.routes.clientProtocol + '://' + __clientHost;
+// Ajuste GitHub Pages: usa apenas o host de Config.routes.client para a origem/comparação
 
 Storage.prefs = function (prop, value, save) {
 	if (value === undefined) {
@@ -359,8 +359,8 @@ Storage.initPrefs = function () {
 
 	$(window).on('message', Storage.onMessage);
 
-	if (document.location.hostname !== Config.routes.client) {
-		$('<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossdomain.php?host=' +
+	if (document.location.hostname !== __clientHost) {
+		$('<iframe src="' + Config.routes.clientProtocol + '://' + __clientHost + '/crossdomain.php?host=' +
 			encodeURIComponent(document.location.hostname) +
 			'&path=' + encodeURIComponent(document.location.pathname.substr(1)) +
 			'&protocol=' + encodeURIComponent(document.location.protocol) +
@@ -368,7 +368,7 @@ Storage.initPrefs = function () {
 		).appendTo('body');
 	} else {
 		Config.server = Config.server || Config.defaultserver;
-		$('<iframe src="' + Config.routes.clientProtocol + '://' + Config.routes.client + '/crossprotocol.html?v1.2" style="display: none;"></iframe>'
+		$('<iframe src="' + Config.routes.clientProtocol + '://' + __clientHost + '/crossprotocol.html?v1.2" style="display: none;"></iframe>'
 		).appendTo('body');
 		setTimeout(function () {
 			Storage.whenPrefsLoaded.load();
@@ -394,7 +394,7 @@ Storage.onMessage = function ($e) {
 		Config.server = JSON.parse(data.substr(1));
 		if (Config.server.registered && Config.server.id !== 'showdown' && Config.server.id !== 'smogtours' && Config.server.id !== 'clodown') {
 			var $link = $('<link rel="stylesheet" ' +
-				'href="//' + Config.routes.client + '/customcss.php?server=' +
+				'href="//' + __clientHost + '/customcss.php?server=' +
 				encodeURIComponent(Config.server.id) + '" />');
 			$('head').append($link);
 		}
@@ -429,7 +429,7 @@ Storage.onMessage = function ($e) {
 
 			// in Safari, cross-origin local storage is apparently treated as session
 			// storage, so mirror the storage in the current origin just in case
-			if (document.location.hostname === Config.routes.client) {
+			if (document.location.hostname === __clientHost) {
 				try {
 					localStorage.setItem('showdown_teams_local', packedTeams);
 				} catch (e) {}
