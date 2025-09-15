@@ -32,7 +32,7 @@ package-lock.json
 /website/files/
 /website/images/
 /website/ads.txt
-/public
+# /public - Removido para permitir GitHub Pages
 
 !/config/config-example.js
 !/config/config-server-example.js
