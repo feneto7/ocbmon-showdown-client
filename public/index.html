@@ -123,6 +123,65 @@ https://psim.us/dev
 <script src="./js/search.js?e8f236d2"></script>
 
 <script src="./data/aliases.js?39e87dbe" async="async"></script>
+<!-- Carregamento dos formatos para fallback -->
+<script src="./data/formats.js?fallback"></script>
 <!-- Mods removidos - apenas wack e gen9predlc são mantidos -->
 <script src="./data/teambuilder-table-wack.js?2700f0d9" defer="defer"></script>
 <script src="./data/teambuilder-table-gen9predlc.js?2700f0d9" defer="defer"></script>
+
+<!-- Script para corrigir problemas de conexão -->
+<script src="./connection-fix.js?fix"></script>
+
+<!-- Script de fallback para garantir carregamento dos formatos -->
+<script>
+// Fallback para carregar formatos caso o servidor não responda
+(function() {
+    var formatsLoaded = false;
+    var timeoutId = null;
+    
+    // Função para carregar formatos do arquivo local como fallback
+    function loadFormatsFallback() {
+        if (window.BattleFormats && Object.keys(window.BattleFormats).length > 0) {
+            return; // Formatos já carregados
+        }
+        
+        // Carrega formatos do arquivo local
+        if (typeof exports !== 'undefined' && exports.Formats) {
+            window.BattleFormats = {};
+            for (var i = 0; i < exports.Formats.length; i++) {
+                var format = exports.Formats[i];
+                if (format.name) {
+                    var formatId = toID(format.name);
+                    window.BattleFormats[formatId] = format;
+                }
+            }
+            console.log('Formatos carregados via fallback:', Object.keys(window.BattleFormats).length);
+        }
+    }
+    
+    // Verifica se os formatos foram carregados após um tempo limite
+    function checkFormatsLoaded() {
+        if (!window.BattleFormats || Object.keys(window.BattleFormats).length === 0) {
+            console.log('Servidor não respondeu, carregando formatos via fallback...');
+            loadFormatsFallback();
+            
+            // Atualiza a interface se o app já foi inicializado
+            if (window.app && window.app.curRoom && window.app.curRoom.updateFormats) {
+                window.app.curRoom.updateFormats();
+            }
+        }
+    }
+    
+    // Configura timeout para verificar carregamento dos formatos
+    timeoutId = setTimeout(checkFormatsLoaded, 10000); // 10 segundos
+    
+    // Limpa o timeout se os formatos forem carregados antes
+    var originalParseFormats = window.app && window.app.parseFormats;
+    if (originalParseFormats) {
+        window.app.parseFormats = function(formatsList) {
+            clearTimeout(timeoutId);
+            return originalParseFormats.call(this, formatsList);
+        };
+    }
+})();
+</script>
