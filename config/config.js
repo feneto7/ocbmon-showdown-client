@@ -42,6 +42,6 @@ Config.defaultserver = {
 	registered: true,
 	https: true,
 	afd: false,
-	loginOverride: 'https://ocbmon-showdown.onrender.com',
+	loginOverride: null,
 };
 /*** End automatically generated configuration ***/

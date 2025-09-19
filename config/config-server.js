@@ -11,15 +11,15 @@ Config.ssl = {
 };
 /*** Begin automatically generated configuration ***/
 Config.defaultserver = {
-	id: 'clodown',
-	host: 'localhost',
-	port: '8443',
-	httpport: 8000,
-	altport: 80,
+	id: 'ocbmon-showdown',
+	host: 'ocbmon-showdown.onrender.com',
+	port: '443',
+	httpport: 80,
+	altport: 443,
 	registered: true,
-	https: false,
+	https: true,
 	afd: false,
-	clientHost: 'localhost:4280',
+	clientHost: 'feneto7.github.io/ocbmon-showdown-client/public',
 	loginOverride: null,
 };
 

@@ -28,28 +28,28 @@ function requireScript(url) {
 	document.head.appendChild(scriptEl);
 }
 
-linkStyle('https://localhost:4280/style/font-awesome.css?');
-linkStyle('https://localhost:4280/style/battle.css?a7');
-linkStyle('https://localhost:4280/style/replay.css?a7');
-linkStyle('https://localhost:4280/style/utilichart.css?a7');
+linkStyle('https://feneto7.github.io/ocbmon-showdown-client/public/style/font-awesome.css?');
+linkStyle('https://feneto7.github.io/ocbmon-showdown-client/public/style/battle.css?a7');
+linkStyle('https://feneto7.github.io/ocbmon-showdown-client/public/style/replay.css?a7');
+linkStyle('https://feneto7.github.io/ocbmon-showdown-client/public/style/utilichart.css?a7');
 
-requireScript('https://localhost:4280/js/lib/ps-polyfill.js');
-requireScript('https://localhost:4280/config/config.js?a7');
-requireScript('https://localhost:4280/js/lib/jquery-1.11.0.min.js');
-requireScript('https://localhost:4280/js/lib/html-sanitizer-minified.js');
-requireScript('https://localhost:4280/js/battle-sound.js');
-requireScript('https://localhost:4280/js/battledata.js?a7');
-requireScript('https://localhost:4280/data/pokedex-mini.js?a7');
-requireScript('https://localhost:4280/data/pokedex-mini-bw.js?a7');
-requireScript('https://localhost:4280/data/graphics.js?a7');
-requireScript('https://localhost:4280/data/pokedex.js?a7');
-requireScript('https://localhost:4280/data/moves.js?a7');
-requireScript('https://localhost:4280/data/abilities.js?a7');
-requireScript('https://localhost:4280/data/items.js?a7');
-requireScript('https://localhost:4280/data/teambuilder-tables.js?a7');
-requireScript('https://localhost:4280/js/battle-tooltips.js?a7');
-requireScript('https://localhost:4280/js/battle.js?a7');
-requireScript('https://localhost:4280/data/battle-icons.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/lib/ps-polyfill.js');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/config/config.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/lib/jquery-1.11.0.min.js');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/lib/html-sanitizer-minified.js');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/battle-sound.js');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/battledata.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/pokedex-mini.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/pokedex-mini-bw.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/graphics.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/pokedex.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/moves.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/abilities.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/items.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/teambuilder-tables.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/battle-tooltips.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/js/battle.js?a7');
+requireScript('https://feneto7.github.io/ocbmon-showdown-client/public/data/battle-icons.js?a7');
 
 var Replays = {
 	battle: null,
