@@ -26,16 +26,16 @@ Config.version = "0.11.2";
 
 Config.routes = {
 	root: 'feneto7.github.io/ocbmon-showdown-client/public',
-	client: 'play.pokemonshowdown.com',
+	client: 'feneto7.github.io/ocbmon-showdown-client/public',
 	clientProtocol: 'https',
 	dex: 'dex.pokemonshowdown.com',
-	replays: 'feneto7.github.io/ocbmon-showdown-client/replays',
-	users: 'feneto7.github.io/ocbmon-showdown-client/users',
+	replays: 'feneto7.github.io/ocbmon-showdown-client/public/replays',
+	users: 'feneto7.github.io/ocbmon-showdown-client/public/users',
 };
 
 
 Config.defaultserver = {
-	id: 'showdown',
+	id: 'ocbmon-showdown',
 	host: 'ocbmon-showdown.onrender.com',
 	port: '443',
 	httpport: 80,
@@ -43,6 +43,6 @@ Config.defaultserver = {
 	registered: true,
 	https: true,
 	afd: false,
-	loginOverride: 'https://play.pokemonshowdown.com',
+	loginOverride: null,
 };
 /*** End automatically generated configuration ***/

@@ -1,10 +1,12 @@
-/sprites/
-/audio/
-/config/
+# /sprites/ - Comentado para permitir sprites no GitHub Pages
+# /audio/ - Comentado para permitir áudio no GitHub Pages
 /index.php
 /preactalpha.html
 /crossprotocol.html
-/data/*
+# /data/* - Comentado para permitir dados essenciais no GitHub Pages
+# Apenas ignore arquivos temporários específicos se necessário
+# /data/temp/*
+# /data/cache/*
 node_modules/
 eslint-cache/
 .DS_Store
@@ -15,12 +17,12 @@ package-lock.json
 
 /js/server/
 /js/*.js.map
-/js/battle*.js
-/js/panel*.js
-/js/replay-embed.js
-/js/client-main.js
-/js/client-core.js
-/js/client-connection.js
+# /js/battle*.js - Comentado para permitir arquivos de batalha no GitHub Pages
+# /js/panel*.js - Comentado para permitir arquivos de painel no GitHub Pages
+# /js/replay-embed.js - Comentado para permitir replay embed no GitHub Pages
+# /js/client-main.js - Comentado para permitir cliente principal no GitHub Pages
+# /js/client-core.js - Comentado para permitir cliente core no GitHub Pages
+# /js/client-connection.js - Comentado para permitir conexão do cliente no GitHub Pages
 
 /replays/caches/
 /replays/replay-config.inc.php
@@ -33,6 +35,4 @@ package-lock.json
 /website/ads.txt
 # /public - Removido para permitir GitHub Pages
 
-!/config/config-example.js
-!/config/config-server-example.js
-!/config/server.json
+

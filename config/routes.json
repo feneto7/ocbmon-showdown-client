@@ -1,0 +1,9 @@
+{
+    "root": "feneto7.github.io/ocbmon-showdown-client/public",
+    "client": "feneto7.github.io/ocbmon-showdown-client/public",
+    "clientProtocol": "https",
+    "dex": "dex.pokemonshowdown.com",
+    "replays": "feneto7.github.io/ocbmon-showdown-client/public/replays",
+    "users": "feneto7.github.io/ocbmon-showdown-client/public/users",
+    "calc": "feneto7.github.io/ocbmon-showdown-client/public/calc"
+}

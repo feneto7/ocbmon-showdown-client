@@ -25,20 +25,20 @@ Config.customcolors = {
 Config.version = "0.11.2";
 
 Config.routes = {
-	root: 'feneto7.github.io/ocbmon-showdown-client',
-	client: 'feneto7.github.io/ocbmon-showdown-client',
+	root: 'feneto7.github.io/ocbmon-showdown-client/public',
+	client: 'feneto7.github.io/ocbmon-showdown-client/public',
 	clientProtocol: 'https',
 	dex: 'dex.pokemonshowdown.com',
-	replays: 'feneto7.github.io/ocbmon-showdown-client/replays',
-	users: 'feneto7.github.io/ocbmon-showdown-client/users',
+	replays: 'feneto7.github.io/ocbmon-showdown-client/public/replays',
+	users: 'feneto7.github.io/ocbmon-showdown-client/public/users',
 };
 
 Config.defaultserver = {
 	id: 'ocbmon-showdown',
 	host: 'ocbmon-showdown.onrender.com',
 	port: '443',
-	httpport: 443,
-	altport: 80,
+	httpport: 80,
+	altport: 443,
 	registered: true,
 	https: true,
 	afd: false,
@@ -55,3 +55,4 @@ Config.testclient = false;
 Config.testclientProtocol = 'https';
 
 /*** End automatically generated configuration ***/
+

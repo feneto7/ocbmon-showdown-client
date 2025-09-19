@@ -73,3 +73,4 @@ Para verificar se a correção funcionou:
 - Os formatos locais incluem Wack OMs e Gen 9 Random Battle
 - O sistema é compatível com GitHub Pages (site estático)
 - Não requer modificações no servidor backend
+
