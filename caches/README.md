@@ -1,9 +1,6 @@
-Caches
-======
+Este diretório é para caches. Tudo aqui pode ser apagado com segurança.
 
-This directory is for caches. Everything here should be safe to delete.
+Itens armazenados em cache aqui:
 
-Things cached here:
-
-- `pokemon-showdown` a checkout of the server repo, used in the build process (mostly for stuff in `play.pokemonshowdown.com/data/`)
-- `eslintcache.json` eslint cache files
+pokemon-showdownum checkout do repositório do servidor, usado no processo de compilação (principalmente para coisas em play.pokemonshowdown.com/data/)
+eslintcache.jsonarquivos de cache do eslint

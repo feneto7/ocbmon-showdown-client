@@ -61,13 +61,13 @@ Config.routes = {
 ${AUTOCONFIG_END}`;
 
 // remove old automatically generated configuration and add the new one
-let configBuf = fs.readFileSync('config/config.js', UTF8);
-if (autoconfigRegex.test(configBuf)) {
-	configBuf = configBuf.replace(autoconfigRegex, autoconfig);
-} else {
-	configBuf += autoconfig;
-}
-fs.writeFileSync('config/config.js', configBuf);
+// let configBuf = fs.readFileSync('config/config.js', UTF8);
+// if (autoconfigRegex.test(configBuf)) {
+// 	configBuf = configBuf.replace(autoconfigRegex, autoconfig);
+// } else {
+// 	configBuf += autoconfig;
+// }
+// fs.writeFileSync('config/config.js', configBuf);
 console.log("DONE");
 
 /*********************************************************

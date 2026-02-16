@@ -1,3 +1,4 @@
+console.log("MODIFICADO POR MIM");
 /**
  * Pokemon Showdown Dex
  *
@@ -190,7 +191,7 @@ export function toName(name: any) {
 export interface SpriteData {
 	w: number;
 	h: number;
-	y?: number;
+	y: number;
 	gen?: number;
 	url?: string;
 	rawHTML?: string;
@@ -208,6 +209,8 @@ export interface TeambuilderSpriteData {
 	spriteid: string;
 	shiny?: boolean;
 }
+
+const CUSTOM_SPRITE_PREFIX = 'https://raw.githubusercontent.com/feneto7/sprites-ocb/main/';
 
 export const Dex = new class implements ModdedDex {
 	readonly Ability = Ability;
@@ -563,188 +566,79 @@ export const Dex = new class implements ModdedDex {
 
 		let el = document.createElement('script');
 		el.src = path + 'data/pokedex-mini-bw.js' + qs;
-		document.getElementsByTagName('body')[0].appendChild(el);
+		document.body.appendChild(el);
 	}
 	getSpriteData(pokemon: Pokemon | Species | string, isFront: boolean, options: {
-		gen?: number,
-		shiny?: boolean,
-		gender?: Dex.GenderName,
-		afd?: boolean,
-		noScale?: boolean,
-		mod?: string,
-		dynamax?: boolean,
+		gen?: number, shiny?: boolean, gender?: Dex.GenderName, afd?: boolean,
+		noScale?: boolean, mod?: string, dynamax?: boolean,
 	} = { gen: 6 }) {
 		const mechanicsGen = options.gen || 6;
-		let isDynamax = !!options.dynamax;
+		let isDynamax =!!options.dynamax;
 		if (pokemon instanceof Pokemon) {
 			if (pokemon.volatiles.transform) {
-				options.shiny = pokemon.volatiles.transform[2];
-				options.gender = pokemon.volatiles.transform[3];
+				options.shiny = pokemon.volatiles.transform[1];
+				options.gender = pokemon.volatiles.transform[2];
 			} else {
 				options.shiny = pokemon.shiny;
 				options.gender = pokemon.gender;
 			}
 			let isGigantamax = false;
 			if (pokemon.volatiles.dynamax) {
-				if (pokemon.volatiles.dynamax[1]) {
+				if (pokemon.volatiles.dynamax[3]) {
 					isGigantamax = true;
-				} else if (options.dynamax !== false) {
+				} else if (options.dynamax!== false) {
 					isDynamax = true;
 				}
 			}
-			pokemon = pokemon.getSpeciesForme() + (isGigantamax ? '-Gmax' : '');
+			pokemon = pokemon.getSpeciesForme() + (isGigantamax? '-Gmax' : '');
 		}
 		const species = Dex.species.get(pokemon);
-		// Gmax sprites are already extremely large, so we don't need to double.
 		if (species.name.endsWith('-Gmax')) isDynamax = false;
-		let spriteData = {
+
+		// LÓGICA DE REDIRECIONAMENTO PARA O SEU GITHUB
+		const isCustom = species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon';
+		const prefix = isCustom? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
+
+		let spriteData: SpriteData = {
 			gen: mechanicsGen,
 			w: 96,
 			h: 96,
 			y: 0,
-			url: Dex.resourcePrefix + 'sprites/',
+			url: prefix + 'sprites/',
 			pixelated: true,
 			isFrontSprite: false,
 			cryurl: '',
 			shiny: options.shiny,
 		};
-		let name = species.spriteid;
-		let dir;
-		let facing;
-		if (isFront) {
-			spriteData.isFrontSprite = true;
-			dir = '';
-			facing = 'front';
-		} else {
-			dir = '-back';
-			facing = 'back';
-		}
+		let name = species.spriteid || species.id;
+		let dir = isFront? '' : '-back';
+		if (isFront) spriteData.isFrontSprite = true;
 
-		// Decide which gen sprites to use.
-		//
-		// There are several different generations we care about here:
-		//
-		//   - mechanicsGen: the generation number of the mechanics and battle (options.gen)
-		//   - graphicsGen: the generation number of sprite/field graphics the user has requested.
-		//     This will default to mechanicsGen, but may be altered depending on user preferences.
-		//   - spriteData.gen: the generation number of a the specific Pokemon sprite in question.
-		//     This defaults to graphicsGen, but if the graphicsGen doesn't have a sprite for the Pokemon
-		//     (eg. Darmanitan in graphicsGen 2) then we go up gens until it exists.
-		//
 		let graphicsGen = mechanicsGen;
 		if (Dex.prefs('nopastgens')) graphicsGen = 6;
 		if (Dex.prefs('bwgfx') && graphicsGen >= 6) graphicsGen = 5;
 		spriteData.gen = Math.max(graphicsGen, Math.min(species.gen, 5));
-		const baseDir = ['', 'gen1', 'gen2', 'gen3', 'gen4', 'gen5', '', '', '', ''][spriteData.gen];
+		const baseDir = ['', 'gen1', 'gen2', 'gen3', 'gen4', 'gen5', '', '', '', ''];
 
-		let miscData = null;
-		let speciesid = species.id;
-		if (species.isTotem) speciesid = toID(name);
-		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
-		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
-		if (!miscData) miscData = {};
-
-		if (miscData.num !== 0 && miscData.num > -5000) {
-			let baseSpeciesid = toID(species.baseSpecies);
-			spriteData.cryurl = 'audio/cries/' + baseSpeciesid;
-			let formeid = species.formeid;
-			if (species.isMega || formeid && (
-				formeid === '-crowned' ||
-				formeid === '-eternal' ||
-				formeid === '-eternamax' ||
-				formeid === '-four' ||
-				formeid === '-hangry' ||
-				formeid === '-hero' ||
-				formeid === '-lowkey' ||
-				formeid === '-noice' ||
-				formeid === '-primal' ||
-				formeid === '-rapidstrike' ||
-				formeid === '-roaming' ||
-				formeid === '-school' ||
-				formeid === '-sky' ||
-				formeid === '-starter' ||
-				formeid === '-super' ||
-				formeid === '-therian' ||
-				formeid === '-unbound' ||
-				baseSpeciesid === 'calyrex' ||
-				baseSpeciesid === 'kyurem' ||
-				baseSpeciesid === 'cramorant' ||
-				baseSpeciesid === 'indeedee' ||
-				baseSpeciesid === 'lycanroc' ||
-				baseSpeciesid === 'necrozma' ||
-				baseSpeciesid === 'oinkologne' ||
-				baseSpeciesid === 'oricorio' ||
-				baseSpeciesid === 'slowpoke' ||
-				baseSpeciesid === 'tatsugiri' ||
-				baseSpeciesid === 'zygarde'
-			)) {
-				spriteData.cryurl += formeid;
-			}
-			spriteData.cryurl += '.mp3';
+		if (mechanicsGen >= 6 &&!options.afd) {
+			dir = 'ani' + dir;
+		} else if (mechanicsGen >= 5 &&!options.afd) {
+			dir = 'gen5ani' + dir;
+		} else {
+			dir = 'dex' + dir;
 		}
+		if (options.shiny) dir += '-shiny';
 
-		if (options.shiny && mechanicsGen > 1) dir += '-shiny';
+		spriteData.url += dir + '/' + name + (mechanicsGen >= 5? '.gif' : '.png');
 
-		// April Fool's 2014
 		if (Dex.afdMode || options.afd) {
-			// Explicit false check above means AFD will be off if the user disables it - no matter what
-			dir = 'afd' + dir;
-			spriteData.url += dir + '/' + name + '.png';
-			// Duplicate code but needed to make AFD tinymax work
-			// April Fool's 2020
-			if (isDynamax && !options.noScale) {
+			spriteData.url = prefix + 'sprites/afd' + (isFront? '' : '-back') + (options.shiny? '-shiny' : '') + '/' + name + '.png';
+			if (isDynamax &&!options.noScale) {
 				spriteData.w *= 0.25;
 				spriteData.h *= 0.25;
 				spriteData.y += -22;
-			} else if (species.isTotem && !options.noScale) {
-				spriteData.w *= 0.5;
-				spriteData.h *= 0.5;
-				spriteData.y += -11;
 			}
 			return spriteData;
-		}
-
-		// Mod Cries
-		if (options.mod) {
-			spriteData.cryurl = `sprites/${options.mod}/audio/${toID(species.baseSpecies)}`;
-			spriteData.cryurl += '.mp3';
-		}
-
-		let animatedSprite = false;
-		if (!Dex.prefs('noanim') && !Dex.prefs('nogif') && spriteData.gen >= 5) {
-			const animationArray: [AnyObject, string][] = [];
-			if (baseDir === '' && window.BattlePokemonSprites) {
-				animationArray.push([BattlePokemonSprites[speciesid], '']);
-			}
-			if (window.BattlePokemonSpritesBW) {
-				animationArray.push([BattlePokemonSpritesBW[speciesid], 'gen5']);
-			}
-			for (const [animationData, animDir] of animationArray) {
-				if (!animationData) continue;
-				if (animationData[facing + 'f'] && options.gender === 'F') facing += 'f';
-				if (!animationData[facing]) continue;
-				if (facing.endsWith('f')) name += '-f';
-				if (spriteData.gen >= 6) spriteData.pixelated = false;
-				dir = animDir + 'ani' + dir;
-				spriteData.w = animationData[facing].w;
-				spriteData.h = animationData[facing].h;
-				spriteData.url += dir + '/' + name + '.gif';
-				animatedSprite = true;
-				break;
-			}
-		}
-		if (!animatedSprite) {
-			// There is no entry or enough data in pokedex-mini.js
-			// Handle these in case-by-case basis; either using BW sprites or matching the played gen.
-			dir = (baseDir || 'gen5') + dir;
-
-			// Gender differences don't exist prior to Gen 4,
-			// so there are no sprites for it
-			if (spriteData.gen >= 4 && miscData['frontf'] && options.gender === 'F') {
-				name += '-f';
-			}
-
-			spriteData.url += dir + '/' + name + '.png';
 		}
 
 		if (!options.noScale) {
@@ -755,18 +649,17 @@ export const Dex = new class implements ModdedDex {
 				spriteData.h *= 2;
 				spriteData.y += -16;
 			} else {
-				// old gen backsprites are multiplied by 1.5x by the 3D engine
 				spriteData.w *= 2 / 1.5;
 				spriteData.h *= 2 / 1.5;
 				spriteData.y += -11;
 			}
 			if (spriteData.gen <= 2) spriteData.y += 2;
 		}
-		if (isDynamax && !options.noScale) {
+		if (isDynamax &&!options.noScale) {
 			spriteData.w *= 2;
 			spriteData.h *= 2;
 			spriteData.y += -22;
-		} else if (species.isTotem && !options.noScale) {
+		} else if (species.isTotem &&!options.noScale) {
 			spriteData.w *= 1.5;
 			spriteData.h *= 1.5;
 			spriteData.y += -11;
@@ -911,9 +804,18 @@ export const Dex = new class implements ModdedDex {
 	getTeambuilderSprite(pokemon: any, dex?: ModdedDex, xOffset = 0, yOffset = 0) {
 		if (!pokemon) return '';
 		const data = this.getTeambuilderSpriteData(pokemon, dex);
-		const shiny = (data.shiny ? '-shiny' : '');
-		const resize = (data.h ? `background-size:${data.h}px` : '');
-		return `background-image:url(${Dex.resourcePrefix}${data.spriteDir}${shiny}/${data.spriteid}.png);background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
+		const id = toID(pokemon.species || pokemon);
+		const species = Dex.species.get(id);
+
+		// Lógica para Fakemon: Se for 'Custom', usa o GitHub e a pasta 'bw'
+		const isCustom = (species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon');
+		const prefix = isCustom? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
+		const spriteDir = isCustom? 'sprites/bw' : data.spriteDir;
+
+		const shiny = (data.shiny? '-shiny' : '');
+		const resize = (data.h? `background-size:${data.h}px` : '');
+		
+		return `background-image:url(${prefix}${spriteDir}${shiny}/${data.spriteid}.png);background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
 	}
 
 	getItemIcon(item: any) {
