@@ -671,6 +671,16 @@
 				var activePos = this.battle.mySide.n > 1 ? pos + this.battle.pokemonControlled : pos;
 				var typeValueTracker = new ModifiableValue(this.battle, this.battle.nearSide.active[activePos], this.battle.myPokemon[pos]);
 				var currentlyDynamaxed = (!canDynamax && maxMoves);
+				// Tipos e habilidade do adversário à frente (para indicador de efetividade +, -, #)
+				var opponent = this.battle.farSide.active[0];
+				var defenderTypes = [];
+				var defenderAbilityId = '';
+				if (opponent && !opponent.fainted) {
+					if (typeof opponent.getTypes === 'function') defenderTypes = opponent.getTypes()[0] || [];
+					else if (opponent.speciesForme) defenderTypes = this.battle.dex.species.get(opponent.speciesForme).types || [];
+					var ab = (typeof opponent.effectiveAbility === 'function' ? opponent.effectiveAbility() : opponent.ability) || '';
+					defenderAbilityId = toID(ab);
+				}
 				for (var i = 0; i < curActive.moves.length; i++) {
 					var moveData = curActive.moves[i];
 					var move = this.battle.dex.moves.get(moveData.move);
@@ -681,6 +691,8 @@
 					if (move.id === 'Recharge') move.type = '&ndash;';
 					if (name.substr(0, 12) === 'Hidden Power') name = 'Hidden Power';
 					var moveType = this.tooltips.getMoveType(move, typeValueTracker)[0];
+					var effSym = defenderTypes.length && moveType ? Dex.getMoveEffectivenessSymbol(moveType, defenderTypes, defenderAbilityId) : '';
+					var nameDisplay = (effSym ? effSym + ' ' : '') + name;
 					var tooltipArgs = 'move|' + moveData.move + '|' + pos;
 					if (moveData.disabled) {
 						movebuttons += '<button disabled class="movebutton has-tooltip" data-tooltip="' + BattleLog.escapeHTML(tooltipArgs) + '">';
@@ -688,7 +700,7 @@
 						movebuttons += '<button class="movebutton type-' + moveType + ' has-tooltip" name="chooseMove" value="' + (i + 1) + '" data-move="' + BattleLog.escapeHTML(moveData.move) + '" data-target="' + BattleLog.escapeHTML(moveData.target) + '" data-tooltip="' + BattleLog.escapeHTML(tooltipArgs) + '">';
 						hasMoves = true;
 					}
-					movebuttons += name + '<br /><small class="type">' + (moveType ? Dex.types.get(moveType).name : "Unknown") + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
+					movebuttons += nameDisplay + '<br /><small class="type">' + (moveType ? Dex.types.get(moveType).name : "Unknown") + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
 				}
 				if (!hasMoves) {
 					moveMenu += '<button class="movebutton" name="chooseMove" value="0" data-move="Struggle" data-target="randomNormal">Struggle<br /><small class="type">Normal</small> <small class="pp">&ndash;</small>&nbsp;</button> ';
@@ -714,6 +726,8 @@
 								var tooltipArgs = classType + 'move|' + baseMove.id + '|' + pos;
 								if (specialMove.id.startsWith('gmax')) tooltipArgs += '|' + specialMove.id;
 								var isDisabled = specialMoves[i].disabled ? 'disabled="disabled"' : '';
+								var specialEffSym = defenderTypes.length && moveType ? Dex.getMoveEffectivenessSymbol(moveType, defenderTypes, defenderAbilityId) : '';
+								var specialNameDisplay = (specialEffSym ? specialEffSym + ' ' : '') + specialMove.name;
 								movebuttons += '<button ' + isDisabled + ' class="movebutton type-' + moveType + ' has-tooltip" name="chooseMove" value="' + (i + 1) + '" data-move="' + BattleLog.escapeHTML(specialMoves[i].move) + '" data-target="' + BattleLog.escapeHTML(specialMoves[i].target) + '" data-tooltip="' + BattleLog.escapeHTML(tooltipArgs) + '">';
 								var pp = curActive.moves[i].pp + '/' + curActive.moves[i].maxpp;
 								if (canZMove) {
@@ -721,7 +735,7 @@
 								} else if (!curActive.moves[i].maxpp) {
 									pp = '&ndash;';
 								}
-								movebuttons += specialMove.name + '<br /><small class="type">' + (moveType ? Dex.types.get(moveType).name : "Unknown") + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
+								movebuttons += specialNameDisplay + '<br /><small class="type">' + (moveType ? Dex.types.get(moveType).name : "Unknown") + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
 							} else {
 								movebuttons += '<button class="movebutton" disabled>&nbsp;</button>';
 							}

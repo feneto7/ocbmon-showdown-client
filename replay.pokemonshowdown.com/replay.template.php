@@ -1,7 +1,7 @@
 <?php
 
 /**
- * index.php
+ * replay.php (template: replay.template.php)
  *
  * Grabs some data to prepopulate a Replay page.
  *

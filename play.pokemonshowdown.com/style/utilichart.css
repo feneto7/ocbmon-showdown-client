@@ -329,6 +329,11 @@
 .utilichart .numsortcol {
 	width: 80px;
 }
+.utilichart .sortcol.iconsortcol {
+	width: 40px;
+	cursor: default;
+	pointer-events: none;
+}
 .utilichart .pnamesortcol {
 	width: 127px;
 }

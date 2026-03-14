@@ -56,7 +56,7 @@ Storage.bg = {
 			if (location.host === 'smogtours.psim.us') {
 				bgid = 'shaymin';
 			} else if (location.host === Config.routes.client || bgid === 'waterfall') {
-				var bgs = ['horizon', 'ocean', 'shaymin', 'charizards', 'psday'];
+				var bgs = ['horizon', 'ocean', 'shaymin', 'ocb', 'psday'];
 				bgid = bgs[Math.floor(Math.random() * bgs.length)];
 			} else {
 				$(document.body).css({
@@ -102,9 +102,8 @@ Storage.bg = {
 				hues = ["39.000000000000064,21.7391304347826%", "170.00000000000003,2.380952380952378%", "157.5,11.88118811881188%", "174.78260869565216,12.041884816753928%", "185.00000000000003,12.76595744680851%", "20,5.660377358490567%"];
 				attrib = '<a href="http://cargocollective.com/bluep" target="_blank" class="subtle">"Shaymin" <small>background by Daniel Kong</small></a>';
 				break;
-			case 'charizards':
-				hues = ["37.159090909090914,74.57627118644066%", "10.874999999999998,70.79646017699115%", "179.51612903225808,52.10084033613446%", "20.833333333333336,36.73469387755102%", "192.3076923076923,80.41237113402063%", "210,29.629629629629633%"];
-				attrib = '<a href="https://lit.link/en/seiryuuden" target="_blank" class="subtle">"Charizards" <small>background by Jessica Valencia</small></a>';
+			case 'ocb':
+				attrib = '';
 				break;
 			case 'psday':
 				hues = ["24.705882352941174,25.37313432835821%", "260.4651162790697,59.44700460829492%", "165.3191489361702,46.07843137254901%", "16.363636363636367,42.63565891472869%", "259.04761904761904,34.05405405405405%", "24.705882352941174,25.37313432835821%"];
@@ -339,8 +338,10 @@ Storage.initPrefs = function () {
 	Storage.loadTeams();
 	if (Config.testclient) {
 		return this.initTestClient();
-	} else if (location.protocol + '//' + location.hostname === Storage.origin) {
-		// Same origin, everything can be kept as default
+	}
+	// Em localhost (dev) trata como same-origin para Teambuilder/prefs abrirem sem iframe
+	var isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+	if (isLocalDev || location.protocol + '//' + location.hostname === Storage.origin) {
 		Config.server = Config.server || Config.defaultserver;
 		this.whenPrefsLoaded.load();
 		if (!window.nodewebkit) this.whenTeamsLoaded.load();

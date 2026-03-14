@@ -48,6 +48,25 @@ available at https://play.pokemonshowdown.com/beta
 You can contribute to it yourself using the same process as before, just
 use `testclient-beta.html` rather than `testclient.html`.
 
+Desenvolvimento local (página inicial)
+------------------------------------------------------------------------
+
+Para abrir a página inicial no navegador com servidor de desenvolvimento:
+
+1. Instale as dependências e faça o build uma vez:
+   - `npm install`
+   - `npm run build`   (gera `play.pokemonshowdown.com/index.html` e compila TS → JS)
+
+2. Suba o cliente:
+   - `npm run dev`
+   - O Vite abre em http://localhost:5173 (porta configurável em `vite.config.js`).
+
+O servidor que o cliente usa é definido em `config/config.js` (ex.: `Config.defaultserver`). Em **localhost** a config já aponta para `localhost:8000` (servidor local).
+
+**Rodar servidor + cliente:** ver `../docs/SERVER_LOCAL.md` (na raiz do workspace CREATUREDEX).
+
+Estrutura do projeto: ver `docs/PROJECT_STRUCTURE.md`.
+
 Testing (the old client)
 ------------------------------------------------------------------------
 

@@ -17,15 +17,26 @@ Config.whitelist = [
 ];
 
 // `defaultserver` specifies the server to use when the domain name in the
-// address bar is `Config.routes.client`.
-Config.defaultserver = {
-	id: 'ocbmons',
-	host: 'ocbmon-showdown.onrender.com',
-	port: 443,
-	httpport: 80,
-	altport: 80,
-	registered: false
-};
+// address bar is `Config.routes.client`. Em localhost usa o server local.
+if (typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+	Config.defaultserver = {
+		id: 'local',
+		host: 'localhost',
+		port: 8000,
+		httpport: 8000,
+		altport: 8000,
+		registered: false
+	};
+} else {
+	Config.defaultserver = {
+		id: 'ocbmons',
+		host: 'ocbmon-showdown.onrender.com',
+		port: 443,
+		httpport: 80,
+		altport: 80,
+		registered: false
+	};
+}
 
 Config.roomsFirstOpenScript = function () {
 };

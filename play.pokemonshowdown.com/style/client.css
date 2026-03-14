@@ -14,7 +14,7 @@ body {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 
 	/* see https://pokemonshowdown.com/credits */
-	background: #344b6c url(../fx/client-bg-charizards.jpg) no-repeat left center fixed;
+	background: #344b6c url(../fx/client-bg-ocb.jpg) no-repeat left center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -2057,6 +2057,9 @@ p.or:after {
 	bottom: 0;
 	padding: 5px 0 5px 8px;
 	overflow: auto;
+}
+.teampane-fullwidth {
+	left: 0;
 }
 @media (max-width:649px) {
 	.folderpane {

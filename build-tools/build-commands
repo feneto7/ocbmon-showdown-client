@@ -4,6 +4,13 @@
  */
 
 const fs = require('fs');
+const path = require('path');
+
+const clientRoot = path.resolve(__dirname, '..');
+const localServer = path.resolve(clientRoot, '..', 'pokemon-showdown');
+const cacheServer = path.resolve(clientRoot, 'caches', 'pokemon-showdown');
+const serverRoot = (fs.existsSync(localServer) && fs.existsSync(path.join(localServer, 'dist')))
+	? localServer : cacheServer;
 
 console.log('Building `data/commands.json` index...');
 
@@ -23,20 +30,22 @@ Object.assign(globalThis, {
 	toID: str => ("" + str).toLowerCase().replace(/[^a-z0-9]/ig, ''),
 });
 
-const { Chat } = require('../caches/pokemon-showdown/dist/server/chat');
+const { Chat } = require(path.join(serverRoot, 'dist/server/chat'));
 
 // yes, these have to be done separately, yes it sucks
 Object.assign(globalThis, {
-	Tournaments: require('../caches/pokemon-showdown/dist/server/tournaments'),
+	Tournaments: require(path.join(serverRoot, 'dist/server/tournaments')),
 	Chat,
 	Dex: { includeData: noop },
 });
 
 Chat.commands = Object.create(null);
 Chat.pages = Object.create(null);
+process.chdir(serverRoot);
 Chat.loadPluginDirectory("dist/server/chat-commands");
 Chat.loadPlugin(globalThis.Tournaments, "tournaments");
 Chat.loadPluginDirectory("dist/server/chat-plugins");
+process.chdir(clientRoot);
 
 const recurseCommands = (table = Chat.commands, namespace = '', results = {}) => {
 	for (const cmd in table) {

@@ -1346,9 +1346,9 @@ class BackgroundListPanel extends PSRoomPanel {
 			<div style="clear: left"></div>
 			<p><strong>Official</strong></p>
 			<div class="bglist">
-				<button onClick={this.setBg} value="charizards" class={option('charizards')}>
+				<button onClick={this.setBg} value="ocb" class={option('ocb')}>
 					<span class="bg" style="background-position: 0 -0px"></span>{}
-					Charizards
+					OCB
 				</button>
 				<button onClick={this.setBg} value="horizon" class={option('horizon')}>
 					<span class="bg" style="background-position: 0 -90px"></span>{}

@@ -125,9 +125,17 @@ export class MainMenuRoom extends PSRoom {
 		case 'challstr': {
 			const [, challstr] = args;
 			PS.user.challstr = challstr;
-			PSLoginServer.query(
-				'upkeep', { challstr }
-			).then(res => {
+			// Servidor sem login (registered: false): não chama action.php; usuário escolhe nome com /trn
+			if (!PS.server?.registered) {
+				PS.user.initializing = false;
+				return;
+			}
+			const upkeepPromise = PSLoginServer.query('upkeep', { challstr });
+			const timeout = 5000;
+			Promise.race([
+				upkeepPromise,
+				new Promise<null>(resolve => setTimeout(() => resolve(null), timeout)),
+			]).then(res => {
 				if (!res?.username) {
 					PS.user.initializing = false;
 					return;

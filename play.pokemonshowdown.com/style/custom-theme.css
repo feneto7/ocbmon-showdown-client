@@ -1,0 +1,328 @@
+/**
+ * Tema customizado: design preto e azul.
+ * Alterar as variáveis abaixo para ajustar o tema.
+ * Carregado após client.css para sobrescrever os estilos padrão.
+ */
+
+:root {
+	/* Preto e azul escuro – fundos */
+	--theme-panel-bg: rgba(18, 22, 32, 0.92);
+	--theme-panel-bg-opaque: #121620;
+	--theme-popup-bg: #1a1f2e;
+	--theme-news-header-bg: #0f1219;
+	--theme-news-content-bg: rgba(26, 31, 46, 0.95);
+	/* Azul – inputs e abas */
+	--theme-input-bg: #1e2538;
+	--theme-input-bg-gradient-start: #252d42;
+	--theme-input-bg-gradient-end: #1a2135;
+	--theme-tab-bg: #1a2135;
+	--theme-tab-bg-gradient: linear-gradient(to bottom, #252d42, #1a2135);
+	--theme-tab-cur-bg: #243553;
+	--theme-tab-cur-gradient: linear-gradient(to bottom, #2d3d5c, #1e2d47);
+	/* Botões genéricos – azul escuro */
+	--theme-button-bg: #1e2d47;
+	--theme-button-bg-hover: rgba(45, 61, 92, 0.8);
+	/* Texto e bordas para contraste */
+	--theme-text: #e4e8f0;
+	--theme-text-muted: #9ca3b4;
+	--theme-border: #2d3d5c;
+	--theme-accent: #3b82f6;
+}
+
+/* Barra superior (header) */
+.header {
+	background: var(--theme-panel-bg-opaque) !important;
+	background-image: none !important;
+	border-bottom: 1px solid var(--theme-border) !important;
+}
+.header .logo {
+	opacity: 0.95;
+}
+.maintabbarbottom {
+	background: var(--theme-border) !important;
+	border-color: var(--theme-border) !important;
+}
+
+/* Painel do menu principal (esquerda) – não usa ps-room-light */
+#mainmenu.ps-room,
+.mainmenuwrapper,
+.leftmenu {
+	background: var(--theme-panel-bg) !important;
+	color: var(--theme-text) !important;
+}
+#mainmenu.ps-room {
+	background: var(--theme-panel-bg) !important;
+}
+
+/* Painéis de salas (área direita, Teambuilder, etc.) */
+.ps-room.ps-room-light,
+.ps-room.ps-room-opaque {
+	background: var(--theme-panel-bg) !important;
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+.ps-room.ps-room-opaque {
+	background: var(--theme-panel-bg-opaque) !important;
+}
+
+/* Menu principal – labels e botões (Connecting..., Teambuilder, Watch a battle) */
+.mainmenu,
+.mainmenu .menugroup,
+.mainmenu .mainmessage {
+	color: var(--theme-text) !important;
+}
+.mainmenu .button,
+.menugroup .button {
+	background: var(--theme-button-bg) !important;
+	background-image: none !important;
+	color: var(--theme-text) !important;
+	border: 1px solid var(--theme-border) !important;
+	box-shadow: none !important;
+}
+.mainmenu .button:hover:not(.disabled),
+.menugroup .button:hover:not(.disabled) {
+	background: var(--theme-button-bg-hover) !important;
+	border-color: var(--theme-accent) !important;
+}
+.mainmenu .button.disabled,
+.menugroup .button.disabled,
+.mainmenu .button.disabled:hover,
+.menugroup .button.disabled:hover {
+	background: var(--theme-button-bg) !important;
+	color: var(--theme-text-muted) !important;
+	border-color: var(--theme-border) !important;
+}
+.mainmenu .button.cur,
+.menugroup .button.cur {
+	background: var(--theme-tab-cur-bg) !important;
+	border-color: var(--theme-accent) !important;
+}
+
+/* News – janela (título e conteúdo) */
+.ps-popup {
+	background: var(--theme-popup-bg) !important;
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+.pm-window h3,
+.pm-window.focused h3,
+.pm-window.focused h3:hover {
+	background: var(--theme-news-header-bg) !important;
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+.pm-window h3:hover {
+	color: var(--theme-text) !important;
+}
+.pm-window .pm-log,
+.pm-log-add {
+	background: var(--theme-news-content-bg) !important;
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+.pm-window h3 .closebutton,
+.pm-window h3 .minimizebutton {
+	color: var(--theme-text-muted) !important;
+}
+.pm-window h3 .closebutton:hover,
+.pm-window h3 .minimizebutton:hover {
+	color: var(--theme-text) !important;
+}
+
+/* Abas do topo (Home, Teambuilder, Lobby) */
+.tabbar a.button {
+	background: var(--theme-tab-bg) !important;
+	background-image: var(--theme-tab-bg-gradient) !important;
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+.tabbar a.button:hover {
+	border-color: var(--theme-accent) !important;
+}
+.tabbar a.button.cur,
+.tabbar a.button.cur:hover {
+	background: var(--theme-tab-cur-bg) !important;
+	background-image: var(--theme-tab-cur-gradient) !important;
+	border-color: var(--theme-accent) !important;
+	color: #fff !important;
+}
+
+/* Campos de texto, select e dropdowns Format/Team */
+.textbox,
+select.button,
+.battleform select,
+.select,
+.team {
+	background: var(--theme-input-bg) !important;
+	background-image: linear-gradient(to bottom, var(--theme-input-bg-gradient-start), var(--theme-input-bg-gradient-end)) !important;
+	color: var(--theme-text) !important;
+	border: 1px solid var(--theme-border) !important;
+	box-shadow: none !important;
+}
+.select:after {
+	color: var(--theme-text-muted) !important;
+}
+.select:disabled,
+.team:disabled {
+	background: var(--theme-input-bg) !important;
+	color: var(--theme-text-muted) !important;
+	border-color: var(--theme-border) !important;
+}
+.textbox::placeholder {
+	color: var(--theme-text-muted) !important;
+}
+.battleform .label,
+.battleform label {
+	color: var(--theme-text) !important;
+}
+.battleform .checkbox,
+.battleform abbr {
+	color: var(--theme-text-muted) !important;
+}
+
+/* Rodapé do menu */
+.mainmenufooter,
+.mainmenufooter small {
+	color: var(--theme-text-muted) !important;
+}
+.mainmenufooter a {
+	color: var(--theme-accent) !important;
+}
+.mainmenufooter a:hover {
+	color: #60a5fa !important;
+}
+
+/* Scrollbar e bordas gerais na área do cliente */
+.ps-room .message,
+.ps-room .chat {
+	color: var(--theme-text) !important;
+}
+.ps-room h2 {
+	color: var(--theme-text) !important;
+	border-color: var(--theme-border) !important;
+}
+
+/* Listas do Teambuilder (Pokémon, movimentos, itens) – texto legível no tema escuro, mesmo azul das abas */
+.ps-room .dexlist .col,
+.ps-room .dexlist .pokemonnamecol,
+.ps-room .dexlist .movenamecol,
+.ps-room .dexlist .namecol,
+.ps-room .dexlist .shortpokemonnamecol,
+.ps-room .dexlist .shortmovenamecol,
+.ps-room .dexlist .tagcol,
+.ps-room .dexlist .abilitycol,
+.ps-room .dexlist .twoabilitycol,
+.ps-room .dexlist .sortcol,
+.ps-room .dexlist .sortrow,
+.ps-room .dexlist .statcol,
+.ps-room .dexlist .bstcol,
+.ps-room .dexlist .labelcol em,
+.ps-room .dexlist .statcol em,
+.ps-room .dexlist .bstcol em,
+.ps-room .dexlist .itemdesccol,
+.ps-room .dexlist .abilitydesccol,
+.ps-room .dexlist .movedesccol,
+.ps-room .utilichart .col,
+.ps-room .utilichart .pokemonnamecol,
+.ps-room .utilichart .movenamecol,
+.ps-room .utilichart .namecol,
+.ps-room .utilichart .shortpokemonnamecol,
+.ps-room .utilichart .shortmovenamecol,
+.ps-room .utilichart .tagcol,
+.ps-room .utilichart .abilitycol,
+.ps-room .utilichart .twoabilitycol,
+.ps-room .utilichart .sortcol,
+.ps-room .utilichart .sortrow,
+.ps-room .utilichart .statcol,
+.ps-room .utilichart .bstcol,
+.ps-room .utilichart .labelcol em,
+.ps-room .utilichart .statcol em,
+.ps-room .utilichart .bstcol em,
+.ps-room .utilichart .itemdesccol,
+.ps-room .utilichart .abilitydesccol,
+.ps-room .utilichart .movedesccol {
+	color: var(--theme-accent) !important;
+}
+
+/* Cabeçalhos das tabelas (Name, Types, Abilities, etc.) e linha de resultado selecionada */
+.ps-room .dexlist h3,
+.ps-room .dexlist li.resultheader h3,
+.ps-room .utilichart h3,
+.ps-room .utilichart li.resultheader h3,
+.ps-room .resultheader h3 {
+	background: var(--theme-tab-bg) !important;
+	color: var(--theme-accent) !important;
+	border-color: var(--theme-border) !important;
+}
+
+/* Painel de pastas (lista de times: Slifer, Home, +) – nome dos times e ícone + */
+.ps-room .folderpane .text,
+.ps-room .folderpane h3,
+.ps-room .folder .selectFolder {
+	background: var(--theme-tab-bg) !important;
+	color: var(--theme-accent) !important;
+	border-color: var(--theme-border) !important;
+}
+.ps-room .folder .selectFolder:hover {
+	background: var(--theme-tab-cur-bg) !important;
+	color: var(--theme-text) !important;
+}
+.ps-room .folder.cur .selectFolder,
+.ps-room .folder.cur .selectFolder:hover {
+	background: var(--theme-tab-cur-bg) !important;
+	color: var(--theme-accent) !important;
+	border-color: var(--theme-accent) !important;
+}
+.ps-room .folderpane i {
+	color: var(--theme-accent) !important;
+}
+
+/* Filtros e numcol nas listas (tier, números) – manter legível */
+.ps-room .dexlist .numcol,
+.ps-room .utilichart .numcol {
+	color: var(--theme-text-muted) !important;
+}
+.ps-room .dexlist .filter,
+.ps-room .utilichart .filter {
+	background: var(--theme-input-bg) !important;
+	color: var(--theme-accent) !important;
+	border-color: var(--theme-border) !important;
+}
+
+/* Fundo das linhas da lista (Pokémon/movimentos) para contraste com o texto azul */
+.ps-room .dexlist .result a,
+.ps-room .utilichart li > a {
+	background: transparent !important;
+	border-color: transparent !important;
+}
+.ps-room .dexlist .result a:hover,
+.ps-room .dexlist .result a.hover,
+.ps-room .utilichart li > a:hover {
+	background: var(--theme-tab-bg) !important;
+	border-color: var(--theme-border) !important;
+}
+.ps-room .dexlist .result a.cur,
+.ps-room .dexlist .result a.cur:hover,
+.ps-room .utilichart li > a.cur {
+	background: var(--theme-tab-cur-bg) !important;
+	border-color: var(--theme-accent) !important;
+}
+
+/* Painel de pastas – fundo dos separadores */
+.ps-room .folderlist .foldersep:before,
+.ps-room .folderlistafter:before,
+.ps-room .folderlistbefore:before,
+.ps-room .folderhack1,
+.ps-room .folderhack2 {
+	background: var(--theme-tab-bg) !important;
+}
+.ps-room .folderpane {
+	border-left-color: var(--theme-border) !important;
+}
+
+/* Ícones de tipo na listagem (DRAGON, FLYING, etc.) – clarear para fundo escuro */
+.ps-room .dexlist .typecol img,
+.ps-room .utilichart .typecol img {
+	opacity: 1;
+	filter: brightness(1.35) contrast(1.1);
+}

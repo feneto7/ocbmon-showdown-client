@@ -673,6 +673,15 @@ class PSUser extends PSStreamModel<PSLoginState | null> {
 			this.update({ success: true });
 			return;
 		}
+		// Servidor sem login (registered: false): envia /trn direto; servidor aceita com noguestsecurity
+		if (!PS.server?.registered) {
+			this.loggingIn = name;
+			this.update(null);
+			PS.send(`/trn ${name}`);
+			this.loggingIn = null;
+			this.update({ success: true });
+			return;
+		}
 		this.loggingIn = name;
 		this.update(null);
 		PSLoginServer.rawQuery(

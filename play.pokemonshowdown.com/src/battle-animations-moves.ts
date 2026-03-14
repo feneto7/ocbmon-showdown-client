@@ -88,6 +88,44 @@ export const BattleMoveAnims: AnimTable = {
 			}, 'ballistic2Under', 'fade');
 		},
 	},
+	// Shadow Bomb (Ghost) – GIF de explosão roxa no adversário (escala 2x)
+	shadowbomb: {
+		anim(scene, [attacker, defender]) {
+			scene.showEffect('shadowbomb', {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				scale: 0.6,
+				opacity: 0,
+			}, {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				scale: 2,
+				opacity: 1,
+				time: 700,
+			}, 'decel', 'fade');
+		},
+	},
+	// Slash Flame (Fire) – GIF de corte e explosão de fogo no adversário
+	slashflame: {
+		anim(scene, [attacker, defender]) {
+			scene.showEffect('flarecut', {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				scale: 0.4,
+				opacity: 0,
+			}, {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				scale: 1,
+				opacity: 1,
+				time: 700,
+			}, 'decel', 'fade');
+		},
+	},
 	instruct: {
 		anim(scene, [attacker, defender]) {
 			BattleOtherAnims.dance.anim(scene, [attacker, defender]);

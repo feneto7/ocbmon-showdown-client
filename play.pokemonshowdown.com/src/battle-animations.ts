@@ -3174,6 +3174,14 @@ const BattleEffects: { [k: string]: SpriteData } = {
 		url: 'hitmarker.png', // by Pokemon Showdown user Ridaz
 		w: 100, h: 100,
 	},
+	shadowbomb: {
+		url: 'shadowbomb.gif',
+		w: 128, h: 128,
+	},
+	flarecut: {
+		url: 'flarecut.gif',
+		w: 128, h: 128,
+	},
 	protect: {
 		rawHTML: '<div class="turnstatus-protect" style="display:none;position:absolute" />',
 		w: 100, h: 70,

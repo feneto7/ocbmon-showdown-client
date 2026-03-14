@@ -2,7 +2,7 @@
   "rewrites": [
     { 
       "source": "/", 
-      "destination": "/play.pokemonshowdown.com/testclient.html" 
+      "destination": "/play.pokemonshowdown.com/client.html" 
     },
     {
       "source": "/(.*)",

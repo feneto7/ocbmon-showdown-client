@@ -247,17 +247,12 @@
 				return;
 			}
 
-			// folderpane
-			buf = '<div class="folderpane">';
-			buf += '</div>';
-
-			// teampane
-			buf += '<div class="teampane">';
+			// Sem painel de pastas/formatos: só teampane em largura total
+			buf = '<div class="teampane teampane-fullwidth">';
 			buf += '</div>';
 
 			this.$el.html(buf);
 
-			this.updateFolderList();
 			this.updateTeamList();
 		},
 		insecureUse: function () {
@@ -397,9 +392,6 @@
 			var filterFolder;
 
 			if (!this.curFolder) {
-				buf += '<h2>Hi</h2>';
-				buf += '<p>Did you have a good day?</p>';
-				buf += '<p><button class="button" name="greeting" value="Y"><i class="fa fa-smile-o"></i> Yes, my day was pretty good</button> <button class="button" name="greeting" value="N"><i class="fa fa-frown-o"></i> No, it wasn\'t great</button></p>';
 				buf += '<h2>All teams <small style="font-weight: normal">(' + teams.length + ')</small></h2>';
 			} else {
 				if (this.curFolder.slice(-1) === '/') {

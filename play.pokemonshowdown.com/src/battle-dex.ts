@@ -191,7 +191,7 @@ export function toName(name: any) {
 export interface SpriteData {
 	w: number;
 	h: number;
-	y: number;
+	y?: number;
 	gen?: number;
 	url?: string;
 	rawHTML?: string;
@@ -227,20 +227,82 @@ export const Dex = new class implements ModdedDex {
 	readonly RESIST = 2;
 	readonly IMMUNE = 3;
 
+	/**
+	 * Símbolo de efetividade do movimento contra o alvo: '' (neutro), '+' (super efetivo), '-' (não efetivo), '#' (imune).
+	 * Usado nos botões de movimento na batalha.
+	 */
+	getMoveEffectivenessSymbol(
+		attackType: Dex.TypeName | string,
+		defenderTypes: readonly (Dex.TypeName | string)[],
+		defenderAbilityId?: ID
+	): '' | '+' | '-' | '#' {
+		if (!defenderTypes?.length) return '';
+		const attackTypeName = (typeof attackType === 'string' && attackType.length > 0)
+			? (Dex.types.get(attackType).name || attackType) as Dex.TypeName
+			: (attackType as Dex.TypeName);
+		const abilityid = defenderAbilityId || ('' as ID);
+
+		// Imunidades por habilidade
+		if (attackTypeName === 'Ground' && abilityid === 'levitate') return '#';
+		if (attackTypeName === 'Electric' && ['lightningrod', 'motordrive', 'voltabsorb'].includes(abilityid)) return '#';
+		if (attackTypeName === 'Water' && ['dryskin', 'waterabsorb', 'stormdrain'].includes(abilityid)) return '#';
+		if (attackTypeName === 'Fire' && ['flashfire', 'wellbakedbody'].includes(abilityid)) return '#';
+		if (attackTypeName === 'Grass' && abilityid === 'sapsipper') return '#';
+		if (attackTypeName === 'Ground' && abilityid === 'eartheater') return '#';
+		if (attackTypeName === 'Psychic' && abilityid === 'telepathy') return '';
+		if (abilityid === 'wonderguard') {
+			let immune = true;
+			for (const t of defenderTypes) {
+				const wt = Dex.types.get(t).damageTaken?.[attackTypeName];
+				if (wt === undefined || wt === Dex.WEAK) { immune = false; break; }
+			}
+			if (immune) return '#';
+		}
+
+		let factor = 1;
+		if ((attackTypeName === 'Fire' || attackTypeName === 'Ice') && abilityid === 'thickfat') factor *= 0.5;
+		if (attackTypeName === 'Fire' && (abilityid === 'waterbubble' || abilityid === 'heatproof')) factor *= 0.5;
+		if (attackTypeName === 'Ghost' && abilityid === 'purifyingsalt') factor *= 0.5;
+		if (attackTypeName === 'Fire' && abilityid === 'fluffy') factor *= 2;
+		for (const t of defenderTypes) {
+			const typeData = Dex.types.get(t);
+			const taken = typeData.damageTaken?.[attackTypeName];
+			if (taken === Dex.IMMUNE) return '#';
+			if (taken === Dex.WEAK) factor *= 2;
+			if (taken === Dex.RESIST) factor *= 0.5;
+		}
+		if (factor === 0) return '#';
+		if (factor > 1) return '+';
+		if (factor < 1) return '-';
+		return '';
+	}
+
 	readonly statNames: readonly Dex.StatName[] = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 	readonly statNamesExceptHP: readonly Dex.StatNameExceptHP[] = ['atk', 'def', 'spa', 'spd', 'spe'];
 
 	pokeballs: string[] | null = null;
 
 	resourcePrefix = (() => {
-		let prefix = '';
-		if (window.document?.location?.protocol !== 'http:') prefix = 'https:';
-		return `${prefix}//${window.Config ? Config.routes.client : 'play.pokemonshowdown.com'}/`;
+		const host = window.document?.location?.hostname || '';
+		const isLocal = host === 'localhost' || host === '127.0.0.1';
+		// Em localhost não temos /sprites/ no cliente; usa o servidor oficial para ícones de tipo etc.
+		const base = isLocal ? 'play.pokemonshowdown.com' : (window.Config?.routes?.client || 'play.pokemonshowdown.com');
+		const protocol = window.document?.location?.protocol !== 'http:' ? 'https:' : 'http:';
+		return `${protocol}//${base}/`;
 	})();
 
 	fxPrefix = (() => {
-		const protocol = (window.document?.location?.protocol !== 'http:') ? 'https:' : '';
-		return `${protocol}//${window.Config ? Config.routes.client : 'play.pokemonshowdown.com'}/fx/`;
+		const host = window.document?.location?.hostname || '';
+		const isLocal = host === 'localhost' || host === '127.0.0.1';
+		// Em localhost usa a própria origem para carregar fx/ do projeto (ex.: shadowbomb.gif, flarecut.gif)
+		const base = isLocal && window.document?.location?.origin
+			? window.document.location.origin.replace(/\/$/, '')
+			: (window.Config?.routes?.client || 'play.pokemonshowdown.com');
+		const protocol = window.document?.location?.protocol !== 'http:' ? 'https:' : 'http:';
+		const prefix = isLocal && window.document?.location?.origin
+			? `${window.document.location.origin.replace(/\/$/, '')}/fx/`
+			: `${protocol}//${base}/fx/`;
+		return prefix;
 	})();
 
 	loadedSpriteData = { xy: 1, bw: 0 };
@@ -595,9 +657,10 @@ export const Dex = new class implements ModdedDex {
 		const species = Dex.species.get(pokemon);
 		if (species.name.endsWith('-Gmax')) isDynamax = false;
 
-		// LÓGICA DE REDIRECIONAMENTO PARA O SEU GITHUB
-		const isCustom = species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon';
-		const prefix = isCustom? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
+		// Custom/Fakemon ou num < 0 (dex customizado): sprite do repositório OCBMons
+		const isCustom = species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon' ||
+			(species.num !== undefined && species.num < 0);
+		const prefix = isCustom ? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
 
 		let spriteData: SpriteData = {
 			gen: mechanicsGen,
@@ -620,23 +683,29 @@ export const Dex = new class implements ModdedDex {
 		spriteData.gen = Math.max(graphicsGen, Math.min(species.gen, 5));
 		const baseDir = ['', 'gen1', 'gen2', 'gen3', 'gen4', 'gen5', '', '', '', ''];
 
-		if (mechanicsGen >= 6 &&!options.afd) {
-			dir = 'ani' + dir;
-		} else if (mechanicsGen >= 5 &&!options.afd) {
-			dir = 'gen5ani' + dir;
+		if (isCustom) {
+			// Repo OCBMons: bw = frente (oponente), bw-back = costas (seu Pokémon)
+			dir = isFront ? 'bw' : 'bw-back';
+			if (options.shiny) dir += '-shiny'; // bw-shiny, bw-back-shiny
+			spriteData.url += dir + '/' + name + '.png';
 		} else {
-			dir = 'dex' + dir;
+			if (mechanicsGen >= 6 &&!options.afd) {
+				dir = 'ani' + dir;
+			} else if (mechanicsGen >= 5 &&!options.afd) {
+				dir = 'gen5ani' + dir;
+			} else {
+				dir = 'dex' + dir;
+			}
+			if (options.shiny) dir += '-shiny';
+			spriteData.url += dir + '/' + name + (mechanicsGen >= 5? '.gif' : '.png');
 		}
-		if (options.shiny) dir += '-shiny';
-
-		spriteData.url += dir + '/' + name + (mechanicsGen >= 5? '.gif' : '.png');
 
 		if (Dex.afdMode || options.afd) {
 			spriteData.url = prefix + 'sprites/afd' + (isFront? '' : '-back') + (options.shiny? '-shiny' : '') + '/' + name + '.png';
 			if (isDynamax &&!options.noScale) {
 				spriteData.w *= 0.25;
 				spriteData.h *= 0.25;
-				spriteData.y += -22;
+				spriteData.y = (spriteData.y ?? 0) + -22;
 			}
 			return spriteData;
 		}
@@ -647,22 +716,22 @@ export const Dex = new class implements ModdedDex {
 			} else if (spriteData.isFrontSprite) {
 				spriteData.w *= 2;
 				spriteData.h *= 2;
-				spriteData.y += -16;
+				spriteData.y = (spriteData.y ?? 0) + -16;
 			} else {
 				spriteData.w *= 2 / 1.5;
 				spriteData.h *= 2 / 1.5;
-				spriteData.y += -11;
+				spriteData.y = (spriteData.y ?? 0) + -11;
 			}
-			if (spriteData.gen <= 2) spriteData.y += 2;
+			if (spriteData.gen <= 2) spriteData.y = (spriteData.y ?? 0) + 2;
 		}
 		if (isDynamax &&!options.noScale) {
 			spriteData.w *= 2;
 			spriteData.h *= 2;
-			spriteData.y += -22;
+			spriteData.y = (spriteData.y ?? 0) + -22;
 		} else if (species.isTotem &&!options.noScale) {
 			spriteData.w *= 1.5;
 			spriteData.h *= 1.5;
-			spriteData.y += -11;
+			spriteData.y = (spriteData.y ?? 0) + -11;
 		}
 
 		return spriteData;
@@ -717,6 +786,20 @@ export const Dex = new class implements ModdedDex {
 			// @ts-expect-error safe, but too lazy to cast
 			id = toID(pokemon.volatiles.formechange[1]);
 		}
+
+		const species = Dex.species.get(id);
+		const isCustom = species && (
+			species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon' ||
+			(species.num !== undefined && species.num < 0)
+		);
+		if (isCustom) {
+			const name = species.spriteid || species.id;
+			const iconUrl = CUSTOM_SPRITE_PREFIX + 'sprites/bw/' + name + '.png';
+			const fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
+				';opacity:.3;filter:grayscale(100%) brightness(.5)' : '');
+			return `background:transparent url(${iconUrl}) no-repeat center;background-size:40px 30px${fainted}`;
+		}
+
 		let num = this.getPokemonIconNum(id, pokemon?.gender === 'F', facingLeft);
 
 		let top = Math.floor(num / 12) * 30;
@@ -807,9 +890,10 @@ export const Dex = new class implements ModdedDex {
 		const id = toID(pokemon.species || pokemon);
 		const species = Dex.species.get(id);
 
-		// Lógica para Fakemon: Se for 'Custom', usa o GitHub e a pasta 'bw'
-		const isCustom = (species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon');
-		const prefix = isCustom? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
+		// Custom/Fakemon ou num < 0: sprite do repositório OCBMons (teambuilder)
+		const isCustom = (species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon') ||
+			(species.num !== undefined && species.num < 0);
+		const prefix = isCustom ? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
 		const spriteDir = isCustom? 'sprites/bw' : data.spriteDir;
 
 		const shiny = (data.shiny? '-shiny' : '');

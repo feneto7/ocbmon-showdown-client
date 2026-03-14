@@ -610,6 +610,19 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		const valueTracker = new ModifiableValue(battle, battle.nearSide.active[activeIndex]!, serverPokemon);
 		const tooltips = (battle.scene as BattleScene).tooltips;
 
+		// Tipos e habilidade do adversário à frente (indicador de efetividade +, -, #)
+		const opponent = battle.farSide.active[0];
+		let defenderTypes: readonly string[] = [];
+		let defenderAbilityId = '' as ID;
+		if (opponent && !opponent.fainted) {
+			defenderTypes = opponent.getTypes()[0] || [];
+			defenderAbilityId = toID(opponent.effectiveAbility());
+		}
+		const effName = (moveName: string, moveType: string) => {
+			const sym = defenderTypes.length && moveType ? dex.getMoveEffectivenessSymbol(moveType, defenderTypes, defenderAbilityId) : '';
+			return sym ? `${sym} ${moveName}` : moveName;
+		};
+
 		if (choices.current.max || (active.maxMoves && !active.canDynamax)) {
 			if (!active.maxMoves) {
 				return <div class="message-error">Maxed with no max moves</div>;
@@ -625,7 +638,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				const gmaxTooltip = maxMoveData.id.startsWith('gmax') ? `|${maxMoveData.id}` : ``;
 				const tooltip = `maxmove|${moveData.name}|${pokemonIndex}${gmaxTooltip}`;
 				return this.renderMoveButton({
-					name: maxMoveData.name,
+					name: effName(maxMoveData.name, moveType),
 					cmd: `/move ${i + 1} max`,
 					type: moveType,
 					tooltip,
@@ -648,7 +661,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				const moveType = tooltips.getMoveType(move, valueTracker)[0];
 				const tooltip = `zmove|${moveData.name}|${pokemonIndex}`;
 				return this.renderMoveButton({
-					name: zMoveData.name,
+					name: effName(zMoveData.name, moveType),
 					cmd: `/move ${i + 1} zmove`,
 					type: moveType,
 					tooltip,
@@ -663,7 +676,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 			const moveType = tooltips.getMoveType(move, valueTracker)[0];
 			const tooltip = `move|${moveData.name}|${pokemonIndex}`;
 			return this.renderMoveButton({
-				name: move.name,
+				name: effName(move.name, moveType),
 				cmd: `/move ${i + 1}${special}`,
 				type: moveType,
 				tooltip,

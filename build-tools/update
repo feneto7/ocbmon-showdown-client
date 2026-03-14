@@ -184,8 +184,9 @@ function addCachebuster(_, attr, url, urlQuery) {
 }
 
 // add hashes to js and css files and rewrite URLs
-let indexContents = fs.readFileSync('play.pokemonshowdown.com/index.template.html', UTF8);
-indexContents = indexContents.replace(URL_REGEX, addCachebuster);
+// play client: template -> client.html; index.html redireciona para client.html
+let clientContents = fs.readFileSync('play.pokemonshowdown.com/client.template.html', UTF8);
+clientContents = clientContents.replace(URL_REGEX, addCachebuster);
 let preactIndexContents = fs.readFileSync('play.pokemonshowdown.com/preactalpha.template.html', UTF8);
 preactIndexContents = preactIndexContents.replace(URL_REGEX, addCachebuster);
 let crossprotocolContents = fs.readFileSync('play.pokemonshowdown.com/crossprotocol.template.html', UTF8);
@@ -215,31 +216,37 @@ try {
 	}
 }
 
-indexContents = indexContents.replace(/<!-- newsid -->/g, newsid);
-indexContents = indexContents.replace(/<!-- news -->/g, news);
+clientContents = clientContents.replace(/<!-- newsid -->/g, newsid);
+clientContents = clientContents.replace(/<!-- news -->/g, news);
 
-let indexContents2 = '';
+let clientContents2 = '';
 try {
-	const indexContentsOld = indexContents;
-	indexContents = indexContents.replace(/<!-- head custom -->/g, '' + fs.readFileSync('config/head-custom.html'));
-	indexContents2 = indexContentsOld
+	const clientContentsOld = clientContents;
+	clientContents = clientContents.replace(/<!-- head custom -->/g, '' + fs.readFileSync('config/head-custom.html'));
+	clientContents2 = clientContentsOld
 		.replace(/<!-- head custom -->/g, '' + fs.readFileSync('config/head-custom-test.html'));
 } catch {}
 
-fs.writeFileSync('play.pokemonshowdown.com/index.html', indexContents);
-if (indexContents2) {
-	fs.writeFileSync('play.pokemonshowdown.com/index-test.html', indexContents2);
+fs.writeFileSync('play.pokemonshowdown.com/client.html', clientContents);
+if (clientContents2) {
+	fs.writeFileSync('play.pokemonshowdown.com/client-test.html', clientContents2);
 }
+// index.html redireciona para a página principal do cliente (client.html)
+fs.writeFileSync('play.pokemonshowdown.com/index.html', '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=client.html"><script>location.replace("client.html");</script></head><body><p><a href="client.html">Abrir cliente</a></p></body></html>');
 fs.writeFileSync('play.pokemonshowdown.com/preactalpha.html', preactIndexContents);
 fs.writeFileSync('play.pokemonshowdown.com/crossprotocol.html', crossprotocolContents);
 fs.writeFileSync('play.pokemonshowdown.com/js/replay-embed.js', replayEmbedContents);
 
-let replaysContents = fs.readFileSync('replay.pokemonshowdown.com/index.template.php', UTF8);
+// replay: replay.template.php -> replay.php; index.php redireciona para replay.php
+let replaysContents = fs.readFileSync('replay.pokemonshowdown.com/replay.template.php', UTF8);
 replaysContents = replaysContents.replace(URL_REGEX, addCachebuster);
-fs.writeFileSync('replay.pokemonshowdown.com/index.php', replaysContents);
+fs.writeFileSync('replay.pokemonshowdown.com/replay.php', replaysContents);
+fs.writeFileSync('replay.pokemonshowdown.com/index.php', '<?php header("Location: replay.php"); exit; ?>');
 
-let teamsContents = fs.readFileSync('teams.pokemonshowdown.com/index.template.html', UTF8);
+// teams: teambuilder.template.html -> teambuilder.html
+let teamsContents = fs.readFileSync('teams.pokemonshowdown.com/teambuilder.template.html', UTF8);
 teamsContents = teamsContents.replace(URL_REGEX, addCachebuster);
-fs.writeFileSync('teams.pokemonshowdown.com/index.html', teamsContents);
+fs.writeFileSync('teams.pokemonshowdown.com/teambuilder.html', teamsContents);
+fs.writeFileSync('teams.pokemonshowdown.com/index.html', '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=teambuilder.html"><script>location.replace("teambuilder.html");</script></head><body><p><a href="teambuilder.html">Abrir Teambuilder</a></p></body></html>');
 
 console.log("DONE");

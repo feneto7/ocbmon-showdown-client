@@ -286,6 +286,12 @@ function toId() {
 				return;
 			}
 
+			// Servidor sem login: envia /trn direto sem precisar do login server
+			if (!Config.server || !Config.server.registered) {
+				app.send('/trn ' + name);
+				return;
+			}
+
 			if (this.get('userid') !== userid) {
 				var self = this;
 				$.post(this.getActionPHP(), {
@@ -329,19 +335,14 @@ function toId() {
 		challstr: '',
 		receiveChallstr: function (challstr) {
 			if (challstr) {
-				/**
-				 * Rename the user based on the `sid` and `showdown_username` cookies.
-				 * Specifically, if the user has a valid session, the user will be
-				 * renamed to the username associated with that session. If the user
-				 * does not have a valid session but does have a persistent username
-				 * (i.e. a `showdown_username` cookie), the user will be renamed to
-				 * that name; if that name is registered, the user will be required
-				 * to authenticate.
-				 *
-				 * See `finishRename` above for a list of events this can emit.
-				 */
 				this.challstr = challstr;
 				var self = this;
+				// Servidor sem login registrado: não chama action.php, mostra "Choose name" direto
+				if (!Config.server || !Config.server.registered) {
+					self.loaded = true;
+					app.topbar.updateUserbar();
+					return;
+				}
 				$.post(this.getActionPHP(), {
 					act: 'upkeep',
 					challstr: this.challstr
