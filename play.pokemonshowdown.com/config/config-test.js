@@ -1,3 +1,1 @@
-/** @type {import('../src/client-main').PSConfig} */
-var Config = Config || {};
-Config.testclient = true;
+// replaced by build from config/config-test.js

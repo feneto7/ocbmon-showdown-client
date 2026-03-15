@@ -29,6 +29,20 @@ try {
 	);
 }
 
+// Copia config da raiz para play.pokemonshowdown.com/config/ (evita symlinks que falham no deploy)
+var playConfig = __dirname + '/play.pokemonshowdown.com/config';
+['config.js', 'config-test.js'].forEach(function (f) {
+	var src = __dirname + '/config/' + f;
+	var dest = playConfig + '/' + f;
+	if (fs.existsSync(src)) fs.copyFileSync(src, dest);
+});
+var colorsSrc = __dirname + '/config/colors.json';
+if (fs.existsSync(colorsSrc)) {
+	fs.copyFileSync(colorsSrc, playConfig + '/colors.json');
+} else {
+	try { fs.writeFileSync(playConfig + '/colors.json', '{}'); } catch (e) {}
+}
+
 var options = {cwd: __dirname, stdio: 'inherit'};
 var full = '';
 
