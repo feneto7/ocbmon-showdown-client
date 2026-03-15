@@ -18,19 +18,39 @@ if (useLocalServer) {
 	serverRoot = localServer;
 	console.log('Using local server: ' + serverRoot);
 } else {
-	if (!fs.existsSync(cacheServer)) {
-		child_process.execSync('git clone https://github.com/feneto7/ocbmon-showdown.git pokemon-showdown', {cwd: path.join(rootDir, 'caches')});
+	const cachesDir = path.join(rootDir, 'caches');
+	fs.mkdirSync(cachesDir, { recursive: true });
+	const pkgJson = path.join(cacheServer, 'package.json');
+	let justCloned = false;
+	if (!fs.existsSync(pkgJson)) {
+		if (fs.existsSync(cacheServer)) {
+			fs.rmSync(cacheServer, { recursive: true, force: true });
+		}
+		console.log('Cloning ocbmon-showdown into caches...');
+		child_process.execSync(
+			'git clone --depth 1 https://github.com/feneto7/ocbmon-showdown.git pokemon-showdown',
+			{ cwd: cachesDir, stdio: 'inherit' }
+		);
+		justCloned = true;
+	}
+	if (!fs.existsSync(pkgJson)) {
+		throw new Error('caches/pokemon-showdown: clone failed or missing package.json');
 	}
 	if (!fs.existsSync(path.join(cacheServer, 'dist'))) {
-		process.stdout.write("Compilando servidor no cache... ");
-		child_process.execSync('npm install && npm run build', {cwd: cacheServer, stdio: 'inherit'});
-		fs.mkdirSync(path.join(cacheServer, 'dist/data/mods'), {recursive: true});
-		console.log("DONE");
+		process.stdout.write('Compilando servidor no cache... ');
+		child_process.execSync('npm ci && node build', { cwd: cacheServer, stdio: 'inherit' });
+		fs.mkdirSync(path.join(cacheServer, 'dist/data/mods'), { recursive: true });
+		console.log('DONE');
+	} else if (!justCloned) {
+		process.stdout.write('Syncing data from Git repository... ');
+		try {
+			child_process.execSync('git pull --ff-only', { cwd: cacheServer, stdio: 'inherit' });
+		} catch {
+			// shallow ou rede: segue com dist atual
+		}
+		child_process.execSync('npm ci && node build', { cwd: cacheServer, stdio: 'inherit' });
+		console.log('DONE');
 	}
-	process.stdout.write("Syncing data from Git repository... ");
-	child_process.execSync('git pull', { cwd: cacheServer });
-	child_process.execSync('npm run build', { cwd: cacheServer });
-	console.log("DONE");
 	serverRoot = cacheServer;
 }
 
