@@ -1,0 +1,1 @@
+exports.Formats = [{section:"OCB",column:1},{name:"[Gen 9] OCBMons",mod:"gen9ocb",ruleset:["Standard","+Custom","+Nonexistent","Dynamax Clause"]}];
