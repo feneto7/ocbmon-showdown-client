@@ -51,6 +51,12 @@ Storage.bg = {
 	 * they still need to be extracted using Color Thief.
 	 */
 	load: function (bgUrl, bgid, hues) {
+		var allowedBgs = ['horizon', 'ocean', 'shaymin', 'ocb', 'psday', 'solidblue', 'custom'];
+		if (bgid && allowedBgs.indexOf(bgid) < 0) {
+			console.log('[OCB] bg: bgid inválido ou removido:', bgid, '-> usando ocb');
+			bgid = 'ocb';
+			bgUrl = Dex.resourcePrefix + 'fx/client-bg-ocb.jpg';
+		}
 		this.id = bgid;
 		if (!bgid) {
 			if (location.host === 'smogtours.psim.us') {
@@ -193,12 +199,16 @@ Storage.bg = {
 };
 
 try {
-	var bg = localStorage.getItem('showdown_bg').split('\n');
-	if (bg.length >= 2) {
-		Storage.bg.load(bg[0], bg[1]);
-		if (bg.length >= 7) Storage.bg.loadHues(bg.slice(2));
+	var bgRaw = localStorage.getItem('showdown_bg');
+	if (typeof bgRaw === 'string') {
+		var bg = bgRaw.split('\n');
+		console.log('[OCB] storage: hostname=', location.hostname, '| routes.client=', (Config.routes && Config.routes.client), '| showdown_bg=', bg[0], '| bgid=', bg[1]);
+		if (bg.length >= 2) {
+			Storage.bg.load(bg[0], bg[1]);
+			if (bg.length >= 7) Storage.bg.loadHues(bg.slice(2));
+		}
 	}
-} catch (e) {}
+} catch (e) { console.log('[OCB] storage load bg error', e); }
 
 if (!Storage.bg.id) {
 	Storage.bg.load();
@@ -216,6 +226,9 @@ if (!Storage.bg.id) {
 // places in certain cases.
 
 Storage.origin = 'https://' + Config.routes.client;
+try {
+	console.log('[OCB] init: origin=', Storage.origin, '| defaultserver=', Config.defaultserver && (Config.defaultserver.host + ':' + Config.defaultserver.port));
+} catch (e) {}
 
 Storage.prefs = function (prop, value, save) {
 	if (value === undefined) {

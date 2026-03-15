@@ -1,6 +1,6 @@
 {
-    "root": "pokemonshowdown.com",
-    "client": "play.pokemonshowdown.com",
+    "root": "ocbmon-showdown-client.vercel.app",
+    "client": "ocbmon-showdown-client.vercel.app",
     "dex": "dex.pokemonshowdown.com",
     "replays": "replay.pokemonshowdown.com",
     "users": "pokemonshowdown.com/users",

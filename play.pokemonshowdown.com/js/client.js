@@ -797,6 +797,12 @@ function toId() {
 				return;
 			}
 
+			// [OCB] debug: ambiente e servidor antes de conectar
+			try {
+				var sockUrl = (Config.server.port === 443 || Config.server.https ? 'https' : 'http') + '://' + Config.server.host + ':' + Config.server.port + (Config.sockjsprefix || '/showdown');
+				console.log('[OCB] hostname=', location.hostname, '| routes.client=', (Config.routes && Config.routes.client), '| server=', Config.server.host + ':' + Config.server.port, '| sockUrl=', sockUrl);
+			} catch (e) { console.log('[OCB] log config error', e); }
+
 			var self = this;
 			var constructSocket = function () {
 				if (location.host === 'localhost.psim.us' || /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.psim\.us/.test(location.host)) {
@@ -825,11 +831,11 @@ function toId() {
 						console.log(url);
 						return new WebSocket(url);
 					}
-					return new SockJS(
-						protocol + '://' + Config.server.host + ':' + Config.server.port + Config.sockjsprefix,
-						[], { timeout: 5 * 60 * 1000 }
-					);
+					var url = protocol + '://' + Config.server.host + ':' + Config.server.port + Config.sockjsprefix;
+					console.log('[OCB] SockJS connect:', url);
+					return new SockJS(url, [], { timeout: 5 * 60 * 1000 });
 				} catch (err) {
+					console.log('[OCB] SockJS error:', err && err.message, err);
 					// The most common case this happens is if an HTTPS connection fails,
 					// and we fall back to HTTP, which throws a SecurityError if the URL
 					// is HTTPS
@@ -845,6 +851,7 @@ function toId() {
 
 			this.socket.onopen = function () {
 				socketopened = true;
+				console.log('[OCB] socket open OK -> servidor conectado');
 				if (altport && window.ga) {
 					ga('send', 'event', 'Alt port connection', Config.server.id);
 				}
@@ -886,8 +893,9 @@ function toId() {
 				s.onclose = socket.onclose;
 				return s;
 			};
-			this.socket.onclose = function () {
+			this.socket.onclose = function (ev) {
 				if (!socketopened) {
+					console.log('[OCB] socket closed before open: code=', ev && ev.code, 'reason=', ev && ev.reason, 'clean=', ev && ev.wasClean);
 					if (Config.server.altport && !altport) {
 						altport = true;
 						Config.server.port = Config.server.altport;
@@ -900,6 +908,7 @@ function toId() {
 						self.socket = reconstructSocket(self.socket);
 						return;
 					}
+					console.log('[OCB] connection failed, triggering init:connectionerror');
 					return self.trigger('init:connectionerror');
 				}
 				self.trigger('init:socketclosed');
