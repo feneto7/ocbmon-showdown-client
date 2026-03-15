@@ -1,0 +1,1 @@
+exports.BattleFormatsData = {slifer:{tier:"OU"}};
