@@ -1,12 +1,6 @@
 {
   "rewrites": [
-    { 
-      "source": "/", 
-      "destination": "/play.pokemonshowdown.com/client.html" 
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/play.pokemonshowdown.com/$1"
-    }
+    { "source": "/", "destination": "/client.html" },
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 }
