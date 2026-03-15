@@ -46,8 +46,8 @@ Config.customcolors = {
 };
 
 Config.routes = {
-	root: 'ocbmon-client.vercel.app',
-	client: 'ocbmon-client.vercel.app',
+	root: 'ocbmon-showdown-client.vercel.app',
+	client: 'ocbmon-showdown-client.vercel.app',
 	dex: 'dex.pokemonshowdown.com',
 	replays: 'replay.pokemonshowdown.com',
 	users: 'pokemonshowdown.com/users',
