@@ -211,6 +211,11 @@ export interface TeambuilderSpriteData {
 }
 
 const CUSTOM_SPRITE_PREFIX = 'https://raw.githubusercontent.com/feneto7/sprites-ocb/main/';
+const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
+	floralyx: true,
+	kraviron: true,
+	luminor: true,
+};
 
 export const Dex = new class implements ModdedDex {
 	readonly Ability = Ability;
@@ -681,10 +686,25 @@ export const Dex = new class implements ModdedDex {
 		const baseDir = ['', 'gen1', 'gen2', 'gen3', 'gen4', 'gen5', '', '', '', ''];
 
 		if (isCustom) {
-			// Repo OCBMons: bw = frente (oponente), bw-back = costas (seu Pokémon)
-			dir = isFront ? 'bw' : 'bw-back';
-			if (options.shiny) dir += '-shiny'; // bw-shiny, bw-back-shiny
-			spriteData.url += dir + '/' + name + '.png';
+			// Sprites custom OCB:
+			// - Se tiver GIF animado cadastrado em CUSTOM_ANIMATED_SPRITES, usa sprites/ani/ (ou ani-shiny/)
+			// - Senão, usa sprite estático em sprites/bw/ (ou bw-shiny/)
+			// - Costas sempre em sprites/bw-back/ (ou bw-back-shiny/)
+			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[name];
+			if (isFront) {
+				if (hasAnimated) {
+					dir = options.shiny ? 'ani-shiny' : 'ani';
+					spriteData.url += dir + '/' + name + '.gif';
+				} else {
+					dir = 'bw';
+					if (options.shiny) dir += '-shiny';
+					spriteData.url += dir + '/' + name + '.png';
+				}
+			} else {
+				dir = 'bw-back';
+				if (options.shiny) dir += '-shiny';
+				spriteData.url += dir + '/' + name + '.png';
+			}
 		} else {
 			if (mechanicsGen >= 6 &&!options.afd) {
 				dir = 'ani' + dir;
