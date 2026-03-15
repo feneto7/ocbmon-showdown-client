@@ -29,35 +29,6 @@ try {
 	);
 }
 
-// Copia config para play.pokemonshowdown.com/config/
-try {
-	var pathMod = require('path');
-	var playConfigDir = pathMod.join(__dirname, 'play.pokemonshowdown.com', 'config');
-	fs.mkdirSync(playConfigDir, { recursive: true });
-	var configSrc = pathMod.join(__dirname, 'config', 'config.js');
-	var configContent;
-	if (fs.existsSync(configSrc)) {
-		configContent = fs.readFileSync(configSrc, 'utf8');
-	} else {
-		var examplePath = pathMod.join(__dirname, 'config', 'config-example.js');
-		if (!fs.existsSync(examplePath)) throw new Error('config/config.js e config/config-example.js nao encontrados');
-		var routes = {};
-		try { routes = JSON.parse(fs.readFileSync(pathMod.join(__dirname, 'config', 'routes.json'), 'utf8')); } catch (e) {}
-		configContent = fs.readFileSync(examplePath, 'utf8');
-		configContent = configContent.replace(/Config\.defaultserver\s*=\s*\{[\s\S]*?\};/,
-			"Config.defaultserver={id:'ocbmons',host:'ocbmon-showdown.onrender.com',port:443,httpport:80,altport:80,registered:false};");
-		if (routes.client) configContent += "\nConfig.routes=" + JSON.stringify(routes) + ";\n";
-	}
-	fs.writeFileSync(pathMod.join(playConfigDir, 'config.js'), configContent);
-	var testSrc = pathMod.join(__dirname, 'config', 'config-test.js');
-	if (fs.existsSync(testSrc)) fs.copyFileSync(testSrc, pathMod.join(playConfigDir, 'config-test.js'));
-	var colorsSrc = pathMod.join(__dirname, 'config', 'colors.json');
-	fs.writeFileSync(pathMod.join(playConfigDir, 'colors.json'), fs.existsSync(colorsSrc) ? fs.readFileSync(colorsSrc) : '{}');
-} catch (e) {
-	console.error('Erro ao copiar config:', e.message);
-	throw e;
-}
-
 var options = {cwd: __dirname, stdio: 'inherit'};
 var full = '';
 

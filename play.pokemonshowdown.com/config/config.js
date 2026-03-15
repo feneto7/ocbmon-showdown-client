@@ -1,1 +1,1 @@
-// replaced by build from config/config.js
+../../config/config.js
