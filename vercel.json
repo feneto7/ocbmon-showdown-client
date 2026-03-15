@@ -3,6 +3,6 @@
   "outputDirectory": "play.pokemonshowdown.com",
   "rewrites": [
     { "source": "/", "destination": "/client.html" },
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/teambuilder", "destination": "/client.html" }
   ]
 }
