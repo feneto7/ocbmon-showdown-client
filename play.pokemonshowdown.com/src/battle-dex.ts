@@ -283,12 +283,9 @@ export const Dex = new class implements ModdedDex {
 	pokeballs: string[] | null = null;
 
 	resourcePrefix = (() => {
-		const host = window.document?.location?.hostname || '';
-		const isLocal = host === 'localhost' || host === '127.0.0.1';
-		// Em localhost não temos /sprites/ no cliente; usa o servidor oficial para ícones de tipo etc.
-		const base = isLocal ? 'play.pokemonshowdown.com' : (window.Config?.routes?.client || 'play.pokemonshowdown.com');
+		// sprites/ (tipos, categorias, pokemonicons etc.) não estão no deploy; usa sempre o servidor oficial
 		const protocol = window.document?.location?.protocol !== 'http:' ? 'https:' : 'http:';
-		return `${protocol}//${base}/`;
+		return `${protocol}//play.pokemonshowdown.com/`;
 	})();
 
 	fxPrefix = (() => {
