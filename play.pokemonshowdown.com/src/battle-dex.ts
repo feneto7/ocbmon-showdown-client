@@ -911,12 +911,19 @@ export const Dex = new class implements ModdedDex {
 		const isCustom = (species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon') ||
 			(species.num !== undefined && species.num < 0);
 		const prefix = isCustom ? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
-		const spriteDir = isCustom? 'sprites/bw' : data.spriteDir;
+		let spriteDir = data.spriteDir;
+		let ext = '.png';
+		if (isCustom) {
+			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[data.spriteid];
+			spriteDir = hasAnimated ? 'sprites/ani' : 'sprites/bw';
+			if (data.shiny) spriteDir += '-shiny';
+			ext = hasAnimated ? '.gif' : '.png';
+		}
 
-		const shiny = (data.shiny? '-shiny' : '');
+		const shiny = !isCustom ? (data.shiny ? '-shiny' : '') : '';
 		const resize = (data.h? `background-size:${data.h}px` : '');
 		
-		return `background-image:url(${prefix}${spriteDir}${shiny}/${data.spriteid}.png);background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
+		return `background-image:url(${prefix}${spriteDir}${shiny}/${data.spriteid}${ext});background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
 	}
 
 	getItemIcon(item: any) {
