@@ -231,6 +231,12 @@ fs.writeFileSync('play.pokemonshowdown.com/client.html', clientContents);
 if (clientContents2) {
 	fs.writeFileSync('play.pokemonshowdown.com/client-test.html', clientContents2);
 }
+
+// Garante que config/config.js seja arquivo real no output (Vercel não segue symlinks externos ao output dir)
+fs.mkdirSync('play.pokemonshowdown.com/config', { recursive: true });
+try { fs.unlinkSync('play.pokemonshowdown.com/config/config.js'); } catch {}
+fs.writeFileSync('play.pokemonshowdown.com/config/config.js', fs.readFileSync('config/config.js', 'utf8'));
+
 // index.html redireciona para a página principal do cliente (client.html)
 fs.writeFileSync('play.pokemonshowdown.com/index.html', '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=client.html"><script>location.replace("client.html");</script></head><body><p><a href="client.html">Abrir cliente</a></p></body></html>');
 fs.writeFileSync('play.pokemonshowdown.com/preactalpha.html', preactIndexContents);
