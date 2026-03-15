@@ -29,18 +29,29 @@ try {
 	);
 }
 
-// Copia config da raiz para play.pokemonshowdown.com/config/ (evita symlinks que falham no deploy)
-var playConfig = __dirname + '/play.pokemonshowdown.com/config';
-['config.js', 'config-test.js'].forEach(function (f) {
-	var src = __dirname + '/config/' + f;
-	var dest = playConfig + '/' + f;
-	if (fs.existsSync(src)) fs.copyFileSync(src, dest);
-});
-var colorsSrc = __dirname + '/config/colors.json';
-if (fs.existsSync(colorsSrc)) {
-	fs.copyFileSync(colorsSrc, playConfig + '/colors.json');
-} else {
-	try { fs.writeFileSync(playConfig + '/colors.json', '{}'); } catch (e) {}
+// Copia config para play.pokemonshowdown.com/config/
+try {
+	var playConfig = __dirname + '/play.pokemonshowdown.com/config';
+	fs.mkdirSync(playConfig, { recursive: true });
+	var configSrc = __dirname + '/config/config.js';
+	var configContent;
+	if (fs.existsSync(configSrc)) {
+		configContent = fs.readFileSync(configSrc, 'utf8');
+	} else {
+		var routes = {};
+		try { routes = JSON.parse(fs.readFileSync(__dirname + '/config/routes.json', 'utf8')); } catch (e) {}
+		configContent = fs.readFileSync(__dirname + '/config/config-example.js', 'utf8');
+		configContent = configContent.replace(/Config\.defaultserver\s*=\s*\{[\s\S]*?\};/,
+			"Config.defaultserver={id:'ocbmons',host:'ocbmon-showdown.onrender.com',port:443,httpport:80,altport:80,registered:false};");
+		if (routes.client) configContent += "\nConfig.routes=" + JSON.stringify(routes) + ";\n";
+	}
+	fs.writeFileSync(playConfig + '/config.js', configContent);
+	var testSrc = __dirname + '/config/config-test.js';
+	if (fs.existsSync(testSrc)) fs.copyFileSync(testSrc, playConfig + '/config-test.js');
+	fs.writeFileSync(playConfig + '/colors.json', fs.existsSync(__dirname + '/config/colors.json') ? fs.readFileSync(__dirname + '/config/colors.json') : '{}');
+} catch (e) {
+	console.error('Erro ao copiar config:', e.message);
+	throw e;
 }
 
 var options = {cwd: __dirname, stdio: 'inherit'};
