@@ -11,9 +11,10 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint --cache --cache-location caches/eslintcache.json",
-    "test": "node build && tsc && eslint --cache --cache-location caches/eslintcache.json --max-warnings 0 && mocha test/*.js",
+    "test": "npm run build:quick && tsc && eslint --cache --cache-location caches/eslintcache.json --max-warnings 0 && mocha test/*.js",
     "fix": "eslint --cache --cache-location caches/eslintcache.json --fix",
-    "build": "node build",
+    "build": "node build full",
+    "build:quick": "node build",
     "build-full": "node build full"
   },
   "dependencies": {

@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "play.pokemonshowdown.com",
   "rewrites": [
     { "source": "/", "destination": "/client.html" },
     { "source": "/(.*)", "destination": "/$1" }
