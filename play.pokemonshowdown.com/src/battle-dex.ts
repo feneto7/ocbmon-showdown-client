@@ -811,7 +811,10 @@ export const Dex = new class implements ModdedDex {
 		);
 		if (isCustom) {
 			const name = species.spriteid || species.id;
-			const iconUrl = CUSTOM_SPRITE_PREFIX + 'sprites/bw/' + name + '.png';
+			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[name];
+			const dir = hasAnimated ? 'sprites/ani' : 'sprites/bw';
+			const ext = hasAnimated ? '.gif' : '.png';
+			const iconUrl = CUSTOM_SPRITE_PREFIX + dir + '/' + name + ext;
 			const fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
 				';opacity:.3;filter:grayscale(100%) brightness(.5)' : '');
 			return `background:transparent url(${iconUrl}) no-repeat center;background-size:40px 30px${fainted}`;
