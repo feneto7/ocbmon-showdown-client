@@ -211,10 +211,22 @@ export interface TeambuilderSpriteData {
 }
 
 const CUSTOM_SPRITE_PREFIX = 'https://raw.githubusercontent.com/feneto7/sprites-ocb/main/';
+// Quem está aqui usa sprites/ani/<id>.gif (e ani-shiny/). Resto usa sprites/bw/<id>.png.
 const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
+	slifer: true,
 	floralyx: true,
 	kraviron: true,
 	luminor: true,
+	acidor: true,
+	cortin: true,
+	cotidex: true,
+	eldlich: true,
+	extermin: true,
+	lamento: true,
+	laminox: true,
+	rogue: true,
+	sombrul: true,
+	urbaneon: true,
 };
 
 export const Dex = new class implements ModdedDex {
