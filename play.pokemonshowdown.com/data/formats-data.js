@@ -1,1 +1,1 @@
-exports.BattleFormatsData = {slifer:{tier:"OU"},luminor:{tier:"OU"},kraviron:{tier:"OU"},floralyx:{tier:"OU"}};
+exports.BattleFormatsData = {slifer:{tier:"OU"},luminor:{tier:"OU"},kraviron:{tier:"OU"},floralyx:{tier:"OU"},acidor:{tier:"OU"},cortin:{tier:"OU"},cotidex:{tier:"OU"},eldlich:{tier:"OU"},extermin:{tier:"OU"},lamento:{tier:"OU"},laminox:{tier:"OU"},rogue:{tier:"OU"},sombrul:{tier:"OU"},urbaneon:{tier:"OU"}};
