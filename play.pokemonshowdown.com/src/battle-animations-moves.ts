@@ -2297,6 +2297,73 @@ export const BattleMoveAnims: AnimTable = {
 			}, 'linear', 'fade');
 		},
 	},
+	extinctionwave: {
+		anim(scene, [attacker, defender]) {
+			defender.delay(125);
+			defender.anim({
+				z: defender.behind(5),
+				time: 75,
+			}, 'swing');
+			defender.anim({
+				time: 75,
+			}, 'swing');
+			defender.anim({
+				z: defender.behind(5),
+				time: 75,
+			}, 'swing');
+			defender.anim({
+				time: 75,
+			}, 'swing');
+			defender.anim({
+				z: defender.behind(5),
+				time: 75,
+			}, 'swing');
+			defender.anim({
+				time: 75,
+			}, 'swing');
+			scene.backgroundEffect('#000000', 700, 0.6);
+			scene.backgroundEffect('linear-gradient(#000000 10%, #2630A9)', 700, 0.6, 330);
+			scene.showEffect('blackwisp', {
+				x: attacker.x,
+				y: attacker.y - 25,
+				z: attacker.z,
+				scale: 0.4,
+				opacity: 0.3,
+			}, {
+				x: defender.x,
+				y: defender.y + 10,
+				z: defender.behind(50),
+				scale: 1,
+				opacity: 0.6,
+			}, 'decel', 'explode');
+			scene.showEffect('blackwisp', {
+				x: attacker.x - 30,
+				y: attacker.y - 25,
+				z: attacker.z,
+				scale: 0.4,
+				opacity: 0.3,
+			}, {
+				x: defender.x - 60,
+				y: defender.y,
+				z: defender.behind(50),
+				scale: 1,
+				opacity: 0.6,
+			}, 'decel', 'explode');
+			scene.showEffect('blackwisp', {
+				x: attacker.x + 30,
+				y: attacker.y - 25,
+				z: attacker.z,
+				scale: 0.4,
+				opacity: 0.3,
+			}, {
+				x: defender.x + 60,
+				y: defender.y,
+				z: defender.behind(50),
+				scale: 1,
+				opacity: 0.6,
+			}, 'decel', 'explode');
+		},
+	},
 	bugbuzz: {
 		anim(scene, [attacker, defender]) {
 			scene.showEffect('energyball', {
@@ -31177,6 +31244,50 @@ export const BattleMoveAnims: AnimTable = {
 			}, 'swing');
 		},
 	},
+	finalflash: {
+		anim(scene, [attacker, defender]) {
+			// mesmo layout geral de Photon Geyser, mas usando o efeito vermelho finalflashwisp
+			scene.backgroundEffect('#000000', 1000, 0.5);
+			scene.backgroundEffect('#8b0000', 600, 0.8, 2100); // vermelho escarlate
+
+			const times = [0, 200, 400, 600, 800, 1000, 1200, 1400];
+			const scales = [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2];
+
+			for (let i = 0; i < times.length; i++) {
+				scene.showEffect('finalflashwisp', {
+					x: attacker.x,
+					y: attacker.y,
+					z: attacker.behind(-20),
+					scale: 0,
+					opacity: 1,
+					time: times[i],
+				}, {
+					scale: scales[i],
+					time: times[i] + 400,
+				}, 'decel', 'fade');
+			}
+
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0,
+				opacity: 1,
+				time: 1600,
+			}, {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				scale: 2.5,
+				time: 2200,
+			}, 'decel', 'fade');
+
+			if (defender) {
+				defender.delay(1500);
+				defender.anim({ time: 300 }, 'swing');
+			}
+		},
+	},
 	coreenforcer: {
 		anim(scene, [attacker, ...defenders]) {
 			scene.backgroundEffect('#082179', 1600, 0.5, 300);
@@ -38480,3 +38591,171 @@ BattleMoveAnims['tripledive'] = { anim: BattleMoveAnims['dive'].anim };
 BattleMoveAnims['hydrosteam'] = { anim: BattleMoveAnims['steameruption'].anim };
 BattleMoveAnims['psyblade'] = { anim: BattleMoveAnims['psychocut'].anim };
 BattleMoveAnims['polarflare'] = { anim: BattleMoveAnims['torchsong'].anim };
+
+// Moves migrados (animação composta) – voltaicshadow, enragingshadowflurry
+BattleMoveAnims['voltaiccyclone'] = { anim: BattleMoveAnims['discharge'].anim };
+BattleMoveAnims['crusadercrash'] = {
+	anim(scene, [attacker, defender]) {
+		scene.backgroundEffect(`url('https://${Config.routes.client}/fx/bg-space.jpg')`, 1000, 0.3);
+		scene.showEffect('shadowball', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.8,
+			opacity: 0.8,
+		}, {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 1,
+			opacity: 1,
+		}, 'linear', 'fade');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+		}, {
+			x: defender.x + 30,
+			y: defender.y + 30,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 200,
+		}, 'linear', 'explode');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+			time: 75,
+		}, {
+			x: defender.x + 20,
+			y: defender.y - 30,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 275,
+		}, 'linear', 'explode');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+			time: 150,
+		}, {
+			x: defender.x - 30,
+			y: defender.y,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 350,
+		}, 'linear', 'explode');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+			time: 225,
+		}, {
+			x: defender.x - 10,
+			y: defender.y + 10,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 425,
+		}, 'linear', 'explode');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+			time: 300,
+		}, {
+			x: defender.x + 10,
+			y: defender.y - 10,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 500,
+		}, 'linear', 'explode');
+		scene.showEffect('fist', {
+			x: defender.x,
+			y: defender.y,
+			z: defender.behind(-100),
+			scale: 0.6,
+			opacity: 0.6,
+			time: 375,
+		}, {
+			x: defender.x - 20,
+			y: defender.y,
+			z: defender.z,
+			scale: 1,
+			opacity: 1,
+			time: 575,
+		}, 'linear', 'explode');
+		attacker.anim({
+			x: attacker.leftof(-20),
+			y: attacker.y,
+			z: attacker.behind(-20),
+			opacity: 0,
+			time: 200,
+		}, 'linear');
+		attacker.anim({
+			opacity: 0,
+			time: 300,
+		}, 'linear');
+		attacker.anim({
+			opacity: 1,
+			time: 200,
+		}, 'linear');
+		defender.delay(125);
+		defender.anim({
+			z: defender.behind(10),
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			z: defender.behind(10),
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			z: defender.behind(10),
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			z: defender.behind(10),
+			time: 75,
+		}, 'swing');
+		defender.anim({
+			time: 150,
+		}, 'swing');
+	},
+};
+BattleMoveAnims['voltaicshadow'] = {
+	anim(scene, [attacker, defender]) {
+		BattleMoveAnims['voltaiccyclone'].anim(scene, [attacker, defender]);
+		BattleMoveAnims['extinctionwave'].anim(scene, [attacker, defender]);
+		BattleMoveAnims['shadowball'].anim(scene, [attacker, defender]);
+	},
+};
+BattleMoveAnims['enragingshadowflurry'] = {
+	anim(scene, [attacker, defender]) {
+		BattleMoveAnims['crusadercrash'].anim(scene, [attacker, defender]);
+		BattleMoveAnims['hyperspacefury'].anim(scene, [attacker, defender]);
+		BattleMoveAnims['alloutpummeling'].anim(scene, [attacker, defender]);
+	},
+};
