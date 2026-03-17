@@ -1,1 +1,1 @@
-exports.Formats = [{section:"OCB",column:1},{name:"[Gen 9] OCBMons",mod:"gen9ocb",ruleset:["Obtainable","HP Percentage Mod","Cancel Mod","Endless Battle Clause","Sleep Clause Mod","OHKO Clause","+Custom","+Nonexistent","Dynamax Clause"]}];
+exports.Formats = [{section:"OCB",column:1},{name:"[Gen 9] OCBMons",mod:"gen9ocb",ruleset:["HP Percentage Mod","Cancel Mod","Endless Battle Clause","Sleep Clause Mod","OHKO Clause","+Custom","+Nonexistent","Dynamax Clause"]}];
