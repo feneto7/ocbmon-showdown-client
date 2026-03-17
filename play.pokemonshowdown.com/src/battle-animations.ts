@@ -2962,6 +2962,10 @@ const BattleEffects: { [k: string]: SpriteData } = {
 		url: 'blackwisp.png',
 		w: 100, h: 100,
 	},
+	finalflashwisp: {
+		url: 'finalflashwisp.png',
+		w: 100, h: 100,
+	},
 	fireball: {
 		url: 'fireball.png',
 		w: 64, h: 64,

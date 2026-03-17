@@ -31246,26 +31246,9 @@ export const BattleMoveAnims: AnimTable = {
 	},
 	finalflash: {
 		anim(scene, [attacker, defender]) {
-			// mesmo layout geral de Photon Geyser, mas usando o efeito vermelho finalflashwisp
+			// Estrutura igual ao Photon Geyser, com finalflashwisp (vermelho) no lugar dos orbes
 			scene.backgroundEffect('#000000', 1000, 0.5);
-			scene.backgroundEffect('#8b0000', 600, 0.8, 2100); // vermelho escarlate
-
-			const times = [0, 200, 400, 600, 800, 1000, 1200, 1400];
-			const scales = [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2];
-
-			for (let i = 0; i < times.length; i++) {
-				scene.showEffect('finalflashwisp', {
-					x: attacker.x,
-					y: attacker.y,
-					z: attacker.behind(-20),
-					scale: 0,
-					opacity: 1,
-					time: times[i],
-				}, {
-					scale: scales[i],
-					time: times[i] + 400,
-				}, 'decel', 'fade');
-			}
+			scene.backgroundEffect('#8b0000', 600, 0.8, 2100);
 
 			scene.showEffect('finalflashwisp', {
 				x: attacker.x,
@@ -31273,19 +31256,176 @@ export const BattleMoveAnims: AnimTable = {
 				z: attacker.behind(-20),
 				scale: 0,
 				opacity: 1,
-				time: 1600,
+				time: 0,
+			}, {
+				scale: 0.6,
+				time: 400,
+			}, 'decel', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0,
+				opacity: 1,
+				time: 200,
+			}, {
+				scale: 0.8,
+				time: 600,
+			}, 'decel', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0,
+				opacity: 1,
+				time: 400,
+			}, {
+				scale: 1,
+				time: 800,
+			}, 'decel', 'explode');
+			scene.showEffect('flareball', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0,
+				opacity: 0.5,
+				time: 0,
+			}, {
+				scale: 0.8,
+				time: 800,
+			}, 'linear', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0.3,
+				opacity: 1,
+				time: 800,
+			}, {
+				scale: 1.2,
+				time: 1300,
+			}, 'linear', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0.3,
+				opacity: 0.5,
+				time: 800,
+			}, {
+				scale: 1.2,
+				time: 1300,
+			}, 'linear', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 1.2,
+				opacity: 0.8,
+				time: 1300,
+			}, {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				time: 1500,
+			}, 'linear', 'explode');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 1.2,
+				opacity: 0.3,
+				time: 1300,
+			}, {
+				x: defender.x,
+				y: defender.y,
+				z: defender.z,
+				time: 1500,
+			}, 'linear', 'explode');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 0.2,
+				opacity: 1,
+				time: 0,
+			}, {
+				scale: 0.5,
+				time: 1200,
+			}, 'decel', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 2,
+				opacity: 1,
+				time: 900,
+			}, {
+				time: 1200,
+			}, 'decel', 'fade');
+			scene.showEffect('finalflashwisp', {
+				x: attacker.x,
+				y: attacker.y,
+				z: attacker.behind(-20),
+				scale: 2,
+				opacity: 1,
+				time: 1300,
 			}, {
 				x: defender.x,
 				y: defender.y,
 				z: defender.z,
 				scale: 2.5,
-				time: 2200,
-			}, 'decel', 'fade');
+				time: 1500,
+			}, 'linear', 'explode');
 
-			if (defender) {
-				defender.delay(1500);
-				defender.anim({ time: 300 }, 'swing');
-			}
+			scene.showEffect('finalflashwisp', {
+				x: defender.x,
+				y: defender.y - 60,
+				z: defender.z,
+				scale: 0,
+				xscale: 0,
+				opacity: 0.5,
+				time: 1500,
+			}, {
+				scale: 2,
+				xscale: 12,
+				opacity: 0,
+				time: 2500,
+			}, 'accel');
+			scene.showEffect('finalflashwisp', {
+				x: defender.x,
+				y: defender.y + 350,
+				z: defender.z,
+				opacity: 1,
+				scale: 8,
+				xscale: 0,
+				yscale: 13,
+				time: 1500,
+			}, {
+				xscale: 4,
+				time: 2500,
+			}, 'accel', 'explode');
+			scene.showEffect('finalflashwisp', {
+				x: defender.x,
+				y: defender.y - 30,
+				z: defender.z,
+				opacity: 1,
+				scale: 2,
+				time: 1500,
+			}, {
+				scale: 6,
+				time: 2500,
+			}, 'decel', 'explode');
+			defender.delay(1500);
+			defender.anim({
+				z: defender.behind(10),
+				opacity: 0,
+				time: 200,
+			}, 'swing');
+			defender.delay(700);
+			defender.anim({
+				time: 300,
+			}, 'swing');
 		},
 	},
 	coreenforcer: {
