@@ -210,7 +210,9 @@ export interface TeambuilderSpriteData {
 	shiny?: boolean;
 }
 
-const CUSTOM_SPRITE_PREFIX = 'https://raw.githubusercontent.com/feneto7/sprites-ocb/main/';
+// Usado para sprites "custom" (Pokemon não-oficiais). Aqui apontamos apenas para a pasta
+// servida pelo próprio servidor do projeto, evitando dependência de repositório remoto.
+const CUSTOM_SPRITE_PREFIX = `${window.location.protocol}//${window.location.host}/sprites-ocb/`;
 // Quem está aqui usa sprites/ani/<id>.gif (e ani-shiny/). Resto usa sprites/bw/<id>.png.
 const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
 	slifer: true,
