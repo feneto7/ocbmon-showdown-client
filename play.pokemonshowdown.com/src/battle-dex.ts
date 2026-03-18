@@ -210,9 +210,8 @@ export interface TeambuilderSpriteData {
 	shiny?: boolean;
 }
 
-// Usado para sprites "custom" (Pokemon não-oficiais). Aqui apontamos apenas para a pasta
-// servida pelo próprio servidor do projeto, evitando dependência de repositório remoto.
-const CUSTOM_SPRITE_PREFIX = `${window.location.protocol}//${window.location.host}/sprites-ocb/`;
+// Sprites custom buscados diretamente do repositório GitHub do projeto.
+const CUSTOM_SPRITE_PREFIX = 'https://raw.githubusercontent.com/feneto7/sprites-ocb/main/';
 // Quem está aqui usa sprites/ani/<id>.gif (e ani-shiny/). Resto usa sprites/bw/<id>.png.
 const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
 	slifer: true,
@@ -673,66 +672,42 @@ export const Dex = new class implements ModdedDex {
 		const species = Dex.species.get(pokemon);
 		if (species.name.endsWith('-Gmax')) isDynamax = false;
 
-		// Custom/Fakemon ou num < 0 (dex customizado): sprite do repositório OCBMons
-		const isCustom = species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon' ||
-			(species.num !== undefined && species.num < 0);
-		const prefix = isCustom ? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
-
+		// Todos os sprites de Pokémon vêm do repositório OCBMons.
+		// sprites/ani/ para OCB animados, sprites/bw/ (ou bw-back/) para o resto.
 		let spriteData: SpriteData = {
 			gen: mechanicsGen,
 			w: 96,
 			h: 96,
 			y: 0,
-			url: prefix + 'sprites/',
+			url: CUSTOM_SPRITE_PREFIX + 'sprites/',
 			pixelated: true,
 			isFrontSprite: false,
 			cryurl: '',
 			shiny: options.shiny,
 		};
 		let name = species.spriteid || species.id;
-		let dir = isFront? '' : '-back';
 		if (isFront) spriteData.isFrontSprite = true;
 
 		let graphicsGen = mechanicsGen;
 		if (Dex.prefs('nopastgens')) graphicsGen = 6;
 		if (Dex.prefs('bwgfx') && graphicsGen >= 6) graphicsGen = 5;
 		spriteData.gen = Math.max(graphicsGen, Math.min(species.gen, 5));
-		const baseDir = ['', 'gen1', 'gen2', 'gen3', 'gen4', 'gen5', '', '', '', ''];
 
-		if (isCustom) {
-			// Sprites custom OCB:
-			// - Se tiver GIF animado cadastrado em CUSTOM_ANIMATED_SPRITES, usa sprites/ani/ (ou ani-shiny/)
-			// - Senão, usa sprite estático em sprites/bw/ (ou bw-shiny/)
-			// - Costas sempre em sprites/bw-back/ (ou bw-back-shiny/)
-			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[name];
-			if (isFront) {
-				if (hasAnimated) {
-					dir = options.shiny ? 'ani-shiny' : 'ani';
-					spriteData.url += dir + '/' + name + '.gif';
-				} else {
-					dir = 'bw';
-					if (options.shiny) dir += '-shiny';
-					spriteData.url += dir + '/' + name + '.png';
-				}
-			} else {
-				dir = 'bw-back';
-				if (options.shiny) dir += '-shiny';
-				spriteData.url += dir + '/' + name + '.png';
-			}
+		// Sprites animados (OCB): usa sprites/ani/. Demais: sprites/bw/ ou bw-back/.
+		const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[name];
+		if (isFront && hasAnimated) {
+			const animDir = options.shiny ? 'ani-shiny' : 'ani';
+			spriteData.url += animDir + '/' + name + '.gif';
+		} else if (isFront) {
+			const bwDir = options.shiny ? 'bw-shiny' : 'bw';
+			spriteData.url += bwDir + '/' + name + '.png';
 		} else {
-			if (mechanicsGen >= 6 &&!options.afd) {
-				dir = 'ani' + dir;
-			} else if (mechanicsGen >= 5 &&!options.afd) {
-				dir = 'gen5ani' + dir;
-			} else {
-				dir = 'dex' + dir;
-			}
-			if (options.shiny) dir += '-shiny';
-			spriteData.url += dir + '/' + name + (mechanicsGen >= 5? '.gif' : '.png');
+			const bwBackDir = options.shiny ? 'bw-back-shiny' : 'bw-back';
+			spriteData.url += bwBackDir + '/' + name + '.png';
 		}
 
 		if (Dex.afdMode || options.afd) {
-			spriteData.url = prefix + 'sprites/afd' + (isFront? '' : '-back') + (options.shiny? '-shiny' : '') + '/' + name + '.png';
+			spriteData.url = CUSTOM_SPRITE_PREFIX + 'sprites/afd' + (isFront? '' : '-back') + (options.shiny? '-shiny' : '') + '/' + name + '.png';
 			if (isDynamax &&!options.noScale) {
 				spriteData.w *= 0.25;
 				spriteData.h *= 0.25;
@@ -818,29 +793,16 @@ export const Dex = new class implements ModdedDex {
 			id = toID(pokemon.volatiles.formechange[1]);
 		}
 
+		// Todos os ícones de Pokémon vêm do repositório OCBMons.
 		const species = Dex.species.get(id);
-		const isCustom = species && (
-			species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon' ||
-			(species.num !== undefined && species.num < 0)
-		);
-		if (isCustom) {
-			const name = species.spriteid || species.id;
-			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[name];
-			const dir = hasAnimated ? 'sprites/ani' : 'sprites/bw';
-			const ext = hasAnimated ? '.gif' : '.png';
-			const iconUrl = CUSTOM_SPRITE_PREFIX + dir + '/' + name + ext;
-			const fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
-				';opacity:.3;filter:grayscale(100%) brightness(.5)' : '');
-			return `background:transparent url(${iconUrl}) no-repeat center;background-size:40px 30px${fainted}`;
-		}
-
-		let num = this.getPokemonIconNum(id, pokemon?.gender === 'F', facingLeft);
-
-		let top = Math.floor(num / 12) * 30;
-		let left = (num % 12) * 40;
-		let fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
-			`;opacity:.3;filter:grayscale(100%) brightness(.5)` : ``);
-		return `background:transparent url(${Dex.resourcePrefix}sprites/pokemonicons-sheet.png?v20) no-repeat scroll -${left}px -${top}px${fainted}`;
+		const iconName = species?.spriteid || id;
+		const hasAnimatedIcon = !!CUSTOM_ANIMATED_SPRITES[iconName];
+		const iconDir = hasAnimatedIcon ? 'sprites/ani' : 'sprites/bw';
+		const iconExt = hasAnimatedIcon ? '.gif' : '.png';
+		const iconUrl = CUSTOM_SPRITE_PREFIX + iconDir + '/' + iconName + iconExt;
+		const fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
+			';opacity:.3;filter:grayscale(100%) brightness(.5)' : '');
+		return `background:transparent url(${iconUrl}) no-repeat center;background-size:40px 30px${fainted}`;
 	}
 
 	getTeambuilderSpriteData(pokemon: any, dex: ModdedDex = Dex): TeambuilderSpriteData {
@@ -924,23 +886,14 @@ export const Dex = new class implements ModdedDex {
 		const id = toID(pokemon.species || pokemon);
 		const species = Dex.species.get(id);
 
-		// Custom/Fakemon ou num < 0: sprite do repositório OCBMons (teambuilder)
-		const isCustom = (species.isNonstandard === 'Custom' || species.isNonstandard === 'Fakemon') ||
-			(species.num !== undefined && species.num < 0);
-		const prefix = isCustom ? CUSTOM_SPRITE_PREFIX : Dex.resourcePrefix;
-		let spriteDir = data.spriteDir;
-		let ext = '.png';
-		if (isCustom) {
-			const hasAnimated = !!CUSTOM_ANIMATED_SPRITES[data.spriteid];
-			spriteDir = hasAnimated ? 'sprites/ani' : 'sprites/bw';
-			if (data.shiny) spriteDir += '-shiny';
-			ext = hasAnimated ? '.gif' : '.png';
-		}
+		// Teambuilder: todos os sprites vêm do repositório OCBMons.
+		const hasAnimatedTB = !!CUSTOM_ANIMATED_SPRITES[data.spriteid];
+		let spriteDir = hasAnimatedTB ? 'sprites/ani' : 'sprites/bw';
+		if (data.shiny) spriteDir += '-shiny';
+		const ext = hasAnimatedTB ? '.gif' : '.png';
+		const resize = (data.h ? `background-size:${data.h}px` : '');
 
-		const shiny = !isCustom ? (data.shiny ? '-shiny' : '') : '';
-		const resize = (data.h? `background-size:${data.h}px` : '');
-		
-		return `background-image:url(${prefix}${spriteDir}${shiny}/${data.spriteid}${ext});background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
+		return `background-image:url(${CUSTOM_SPRITE_PREFIX}${spriteDir}/${data.spriteid}${ext});background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
 	}
 
 	getItemIcon(item: any) {
