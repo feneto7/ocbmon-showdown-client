@@ -230,6 +230,16 @@ const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
 	urbaneon: true,
 };
 
+function resolveCustomSpriteName(species: Species, fallbackId: string) {
+	const normalizedFallbackId = toID(fallbackId);
+	// Em várias entradas custom, o ID interno difere do toID(name).
+	// Nesses casos, prioriza o ID para casar com os arquivos de sprite.
+	if (species.exists && species.id && species.id !== toID(species.name)) {
+		return species.id.replace(/-/g, '');
+	}
+	return (species.spriteid || normalizedFallbackId).replace(/-/g, '');
+}
+
 export const Dex = new class implements ModdedDex {
 	readonly Ability = Ability;
 	readonly Item = Item;
@@ -686,7 +696,7 @@ export const Dex = new class implements ModdedDex {
 			shiny: options.shiny,
 		};
 		// No repositório custom, os arquivos foram padronizados sem "-".
-		let name = (species.spriteid || species.id).replace(/-/g, '');
+		let name = resolveCustomSpriteName(species, typeof pokemon === 'string' ? pokemon : species.id);
 		if (isFront) spriteData.isFrontSprite = true;
 
 		let graphicsGen = mechanicsGen;
@@ -797,7 +807,7 @@ export const Dex = new class implements ModdedDex {
 		// Todos os ícones de Pokémon vêm do repositório OCBMons.
 		const species = Dex.species.get(id);
 		// Ícones custom também usam nome sem "-".
-		const iconName = (species?.spriteid || id).replace(/-/g, '');
+		const iconName = resolveCustomSpriteName(species, id);
 		const hasAnimatedIcon = !!CUSTOM_ANIMATED_SPRITES[iconName];
 		const iconDir = hasAnimatedIcon ? 'sprites/ani' : 'sprites/bw';
 		const iconExt = hasAnimatedIcon ? '.gif' : '.png';
@@ -813,11 +823,11 @@ export const Dex = new class implements ModdedDex {
 		let species = Dex.species.get(id);
 		let spriteid: string;
 		if (typeof pokemon === 'string') {
-			spriteid = species.spriteid || id;
+			spriteid = resolveCustomSpriteName(species, id);
 		} else {
 			spriteid = pokemon.spriteid;
 			if (pokemon.species && !spriteid) {
-				spriteid = species.spriteid || id;
+				spriteid = resolveCustomSpriteName(species, id);
 			}
 		}
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };

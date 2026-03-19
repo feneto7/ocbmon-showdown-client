@@ -202,10 +202,21 @@ export class TeamEditorState extends PSModel {
 		return this.getResultValue(result);
 	}
 	changeSpecies(set: Dex.PokemonSet, speciesName: string) {
-		const species = this.dex.species.get(speciesName);
+		let species = this.dex.species.get(speciesName);
+		if (!species.exists && window.BattlePokedex) {
+			const selectedId = toID(speciesName);
+			for (const id in window.BattlePokedex) {
+				const entry = window.BattlePokedex[id];
+				if (!entry) continue;
+				if (entry.name === speciesName || toID(entry.name) === selectedId) {
+					species = this.dex.species.get(id);
+					break;
+				}
+			}
+		}
 		if (set.item === this.getDefaultItem(set.species)) set.item = undefined;
 		if (set.name === set.species.split('-')[0]) delete set.name;
-		set.species = species.name;
+		set.species = species.id !== toID(species.name) ? species.id : species.name;
 		set.ability = this.getDefaultAbility(set);
 		set.item = this.getDefaultItem(species.name) ?? set.item;
 
