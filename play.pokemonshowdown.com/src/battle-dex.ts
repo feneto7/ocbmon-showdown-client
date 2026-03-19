@@ -685,7 +685,8 @@ export const Dex = new class implements ModdedDex {
 			cryurl: '',
 			shiny: options.shiny,
 		};
-		let name = species.spriteid || species.id;
+		// No repositório custom, os arquivos foram padronizados sem "-".
+		let name = (species.spriteid || species.id).replace(/-/g, '');
 		if (isFront) spriteData.isFrontSprite = true;
 
 		let graphicsGen = mechanicsGen;
@@ -795,7 +796,8 @@ export const Dex = new class implements ModdedDex {
 
 		// Todos os ícones de Pokémon vêm do repositório OCBMons.
 		const species = Dex.species.get(id);
-		const iconName = species?.spriteid || id;
+		// Ícones custom também usam nome sem "-".
+		const iconName = (species?.spriteid || id).replace(/-/g, '');
 		const hasAnimatedIcon = !!CUSTOM_ANIMATED_SPRITES[iconName];
 		const iconDir = hasAnimatedIcon ? 'sprites/ani' : 'sprites/bw';
 		const iconExt = hasAnimatedIcon ? '.gif' : '.png';
@@ -887,13 +889,14 @@ export const Dex = new class implements ModdedDex {
 		const species = Dex.species.get(id);
 
 		// Teambuilder: todos os sprites vêm do repositório OCBMons.
-		const hasAnimatedTB = !!CUSTOM_ANIMATED_SPRITES[data.spriteid];
+		const normalizedSpriteId = data.spriteid.replace(/-/g, '');
+		const hasAnimatedTB = !!CUSTOM_ANIMATED_SPRITES[normalizedSpriteId];
 		let spriteDir = hasAnimatedTB ? 'sprites/ani' : 'sprites/bw';
 		if (data.shiny) spriteDir += '-shiny';
 		const ext = hasAnimatedTB ? '.gif' : '.png';
 		const resize = (data.h ? `background-size:${data.h}px` : '');
 
-		return `background-image:url(${CUSTOM_SPRITE_PREFIX}${spriteDir}/${data.spriteid}${ext});background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
+		return `background-image:url(${CUSTOM_SPRITE_PREFIX}${spriteDir}/${normalizedSpriteId}${ext});background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
 	}
 
 	getItemIcon(item: any) {
