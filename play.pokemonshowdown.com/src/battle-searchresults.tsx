@@ -100,7 +100,7 @@ export class PSSearchResults extends preact.Component<{
 
 				<span class="col typecol">
 					{pokemon.types.map(type =>
-						<img src={`${Dex.resourcePrefix}sprites/types/${type}.png`} alt={type} height="14" width="32" class="pixelated" />
+						<img src={Dex.getTypeIconUrl(type)} alt={type} height="14" width="32" class="pixelated" />
 					)}
 				</span>
 
@@ -250,7 +250,7 @@ export class PSSearchResults extends preact.Component<{
 
 			<span class="col typecol">
 				<img
-					src={`${Dex.resourcePrefix}sprites/types/${encodeURIComponent(move.type)}.png`}
+					src={Dex.getTypeIconUrl(move.type)}
 					alt={move.type} height="14" width="32" class="pixelated"
 				/>
 				<img
@@ -282,7 +282,7 @@ export class PSSearchResults extends preact.Component<{
 
 			<span class="col typecol">
 				<img
-					src={`${Dex.resourcePrefix}sprites/types/${encodeURIComponent(name)}.png`}
+					src={Dex.getTypeIconUrl(name)}
 					alt={name} height="14" width="32" class="pixelated"
 				/>
 			</span>

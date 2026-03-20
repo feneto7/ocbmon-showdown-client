@@ -919,11 +919,35 @@ export const Dex = new class implements ModdedDex {
 		return `background:transparent url(${Dex.resourcePrefix}sprites/itemicons-sheet.png?v1) no-repeat scroll -${left}px -${top}px`;
 	}
 
+	/**
+	 * URL do ícone de tipo usando os assets do repositório `sprites-ocb`.
+	 * Assim, qualquer `types/*.png` novo que você adicionar já aparece automaticamente.
+	 */
+	getTypeIconUrl(type: string | null) {
+		const rawType = type || '';
+
+		// O chart geralmente fornece o `name` correto; se ainda não existir no chart,
+		// usamos o próprio valor recebido como fallback.
+		let typeName = this.types.get(rawType).name || rawType;
+		if (!typeName || typeName === '???') typeName = 'Qmarks';
+
+		// Normaliza para o formato esperado pelos arquivos (ex.: `bone` -> `Bone`).
+		if (typeName === typeName.toLowerCase()) {
+			typeName = typeName.charAt(0).toUpperCase() + typeName.slice(1);
+		}
+
+		// Alguns ids podem conter `?` no nome exibido.
+		const sanitizedType = typeName.replace(/\?/g, '%3f');
+		return `${CUSTOM_SPRITE_PREFIX}types/${sanitizedType}.png`;
+	}
+
 	getTypeIcon(type: string | null, b?: boolean) { // b is just for utilichart.js
-		type = this.types.get(type).name;
-		if (!type) type = '???';
-		let sanitizedType = type.replace(/\?/g, '%3f');
-		return `<img src="${Dex.resourcePrefix}sprites/types/${sanitizedType}.png" alt="${type}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
+		let typeName = this.types.get(type).name || type || '???';
+
+		// Se o chart retornar vazio para `???`, mostramos o texto original mesmo usando Qmarks.png.
+		if (!typeName) typeName = '???';
+
+		return `<img src="${this.getTypeIconUrl(type)}" alt="${typeName}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
 	}
 
 	getCategoryIcon(category: string | null) {

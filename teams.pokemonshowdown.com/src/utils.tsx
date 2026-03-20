@@ -216,12 +216,11 @@ export class PSIcon extends preact.Component<{
 				style={{ background: Dex.getItemIcon(this.props.item).replace('background:', '') }}
 			></span>;
 		} else if (this.props.type) {
-			let type = Dex.types.get(this.props.type).name;
-			if (!type) type = '???';
-			let sanitizedType = type.replace(/\?/g, '%3f');
+			let typeName = Dex.types.get(this.props.type).name || this.props.type || '???';
+			if (!typeName) typeName = '???';
 			return <img
-				src={`${Dex.resourcePrefix}sprites/types/${sanitizedType}.png`}
-				alt={this.props.hideAlt ? undefined : type}
+				src={Dex.getTypeIconUrl(this.props.type)}
+				alt={this.props.hideAlt ? undefined : typeName}
 				height="14"
 				width="32"
 				class="pixelated"

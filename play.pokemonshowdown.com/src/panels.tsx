@@ -925,11 +925,11 @@ export function PSIcon(
 		return <span class="itemicon" style={Dex.getItemIcon(props.item)} />;
 	}
 	if ('type' in props) {
-		let type = Dex.types.get(props.type).name;
-		if (!type) type = '???';
-		let sanitizedType = type.replace(/\?/g, '%3f');
+		let typeName = Dex.types.get(props.type).name || props.type || '???';
+		if (!typeName) typeName = '???';
 		return <img
-			src={`${Dex.resourcePrefix}sprites/types/${sanitizedType}.png`} alt={type}
+			src={Dex.getTypeIconUrl(props.type)}
+			alt={typeName}
 			height="14" width="32" class={`pixelated${props.b ? ' b' : ''}`} style="vertical-align:middle"
 		/>;
 	}
