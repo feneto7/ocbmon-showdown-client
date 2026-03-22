@@ -1419,7 +1419,7 @@ this.addSideCondition(siden,_id,true);
 
 typeAnim=function typeAnim(pokemon,types){
 var result=BattleLog.escapeHTML(types).split('/').map(function(type){return"<img src=\""+
-Dex.resourcePrefix+"sprites/types/"+encodeURIComponent(type)+".png\" alt=\""+type+"\" class=\"pixelated\" />";}
+Dex.getTypeIconUrl(type)+"\" alt=\""+type+"\" class=\"pixelated\" />";}
 ).join(' ');
 this.resultAnim(pokemon,result,'neutral');
 };_proto.
@@ -2761,7 +2761,7 @@ if(symbol){
 buf+=" <img src=\""+Dex.resourcePrefix+"sprites/misc/"+symbol+".png\" alt=\""+symbol+"\" style=\"vertical-align:text-bottom;\" />";
 }
 if(pokemon.terastallized){
-buf+=" <img src=\""+Dex.resourcePrefix+"sprites/types/Tera"+pokemon.terastallized+".png\" alt=\"Tera-"+pokemon.terastallized+"\" style=\"vertical-align:text-bottom;\" height=\"16\" width=\"16\" />";
+buf+=" <img src=\""+Dex.getTypeIconUrl(pokemon.terastallized)+"\" alt=\"Tera-"+pokemon.terastallized+"\" style=\"vertical-align:text-bottom;\" height=\"16\" width=\"16\" />";
 }
 
 buf+="</strong><div class=\"hpbar\"><div class=\"hptext\"></div><div class=\"hptextborder\"></div><div class=\"prevhp\"><div class=\"hp\"></div></div><div class=\"status\"></div>";
@@ -2838,16 +2838,16 @@ status+='<span class="par">PAR</span> ';
 status+='<span class="frz">FRZ</span> ';
 }
 if(pokemon.terastallized){
-status+="<img src=\""+Dex.resourcePrefix+"sprites/types/"+encodeURIComponent(pokemon.terastallized)+".png\" alt=\""+pokemon.terastallized+"\" class=\"pixelated\" /> ";
+status+="<img src=\""+Dex.getTypeIconUrl(pokemon.terastallized)+"\" alt=\""+pokemon.terastallized+"\" class=\"pixelated\" /> ";
 }else if(pokemon.volatiles.typechange&&pokemon.volatiles.typechange[1]){
 var types=pokemon.volatiles.typechange[1].split('/');for(var _i34=0;_i34<
 types.length;_i34++){var type=types[_i34];
-status+='<img src="'+Dex.resourcePrefix+'sprites/types/'+encodeURIComponent(type)+'.png" alt="'+type+'" class="pixelated" /> ';
+status+='<img src="'+Dex.getTypeIconUrl(type)+'" alt="'+type+'" class="pixelated" /> ';
 }
 }
 if(pokemon.volatiles.typeadd){
 var _type=pokemon.volatiles.typeadd[1];
-status+='+<img src="'+Dex.resourcePrefix+'sprites/types/'+_type+'.png" alt="'+_type+'" class="pixelated" /> ';
+status+='+<img src="'+Dex.getTypeIconUrl(_type)+'" alt="'+_type+'" class="pixelated" /> ';
 }
 for(var stat in pokemon.boosts){
 if(pokemon.boosts[stat]){
