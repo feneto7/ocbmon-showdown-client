@@ -225,6 +225,7 @@ const CUSTOM_ANIMATED_SPRITES: {[id: string]: boolean} = {
 	extermin: true,
 	lamento: true,
 	laminox: true,
+	lucariomegaz: true,
 	rogue: true,
 	sombrul: true,
 	urbaneon: true,
