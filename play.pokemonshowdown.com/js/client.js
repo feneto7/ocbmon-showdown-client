@@ -848,6 +848,8 @@ function toId() {
 			var socketopened = false;
 			var altport = (Config.server.port === Config.server.altport);
 			var altprefix = false;
+			// keepalive: Render fecha WebSockets ociosos em ~90s; ping a cada 50s
+			var keepAliveInterval = null;
 
 			if (!this.socket) {
 				self.trigger('init:connectionerror');
@@ -857,6 +859,12 @@ function toId() {
 			this.socket.onopen = function () {
 				socketopened = true;
 				console.log('[OCB] socket open OK -> servidor conectado');
+				if (keepAliveInterval) clearInterval(keepAliveInterval);
+				keepAliveInterval = setInterval(function () {
+					if (self.socket && self.socket.readyState === 1) {
+						self.socket.send('|/ping');
+					}
+				}, 50 * 1000);
 				if (altport && window.ga) {
 					ga('send', 'event', 'Alt port connection', Config.server.id);
 				}
@@ -904,6 +912,10 @@ function toId() {
 				return s;
 			};
 			this.socket.onclose = function (ev) {
+				if (keepAliveInterval) {
+					clearInterval(keepAliveInterval);
+					keepAliveInterval = null;
+				}
 				if (!socketopened) {
 					console.log('[OCB] socket closed before open: code=', ev && ev.code, 'reason=', ev && ev.reason, 'clean=', ev && ev.wasClean);
 					if (Config.server.altport && !altport) {
