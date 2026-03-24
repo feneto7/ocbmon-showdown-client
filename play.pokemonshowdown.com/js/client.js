@@ -849,6 +849,11 @@ function toId() {
 			var altport = (Config.server.port === Config.server.altport);
 			var altprefix = false;
 
+			if (!this.socket) {
+				self.trigger('init:connectionerror');
+				return;
+			}
+
 			this.socket.onopen = function () {
 				socketopened = true;
 				console.log('[OCB] socket open OK -> servidor conectado');
@@ -888,6 +893,11 @@ function toId() {
 			};
 			var reconstructSocket = function (socket) {
 				var s = constructSocket();
+				if (!s) {
+					// constructSocket pode retornar null em caso de erro (ex: SecurityError)
+					setTimeout(function () { self.trigger('init:connectionerror'); }, 0);
+					return socket;
+				}
 				s.onopen = socket.onopen;
 				s.onmessage = socket.onmessage;
 				s.onclose = socket.onclose;
