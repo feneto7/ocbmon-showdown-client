@@ -10,6 +10,9 @@ import { Config, PS } from "./client-main";
 declare const SockJS: any;
 declare const POKEMON_SHOWDOWN_TESTCLIENT_KEY: string | undefined;
 
+// Render fecha conexões WebSocket ociosas em ~90s; enviamos ping a cada 50s
+const KEEP_ALIVE_MS = 50 * 1000;
+
 export class PSConnection {
 	socket: WebSocket | null = null;
 	connected = false;
@@ -18,6 +21,7 @@ export class PSConnection {
 	private reconnectCap = 15000;
 	private shouldReconnect = true;
 	reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+	private keepAliveInterval: ReturnType<typeof setInterval> | null = null;
 	private worker: Worker | null = null;
 
 	constructor() {
@@ -124,6 +128,15 @@ export class PSConnection {
 			this.reconnectDelay = 1000;
 			this.queue.forEach(msg => socket.send(msg));
 			this.queue = [];
+
+			// mantém o WebSocket vivo contra o timeout de inatividade do Render
+			this.clearKeepAlive();
+			this.keepAliveInterval = setInterval(() => {
+				if (socket.readyState === WebSocket.OPEN) {
+					socket.send('|/ping');
+				}
+			}, KEEP_ALIVE_MS);
+
 			PS.update();
 		};
 
@@ -133,6 +146,7 @@ export class PSConnection {
 
 		socket.onclose = () => {
 			console.log('\u274C (DISCONNECTED)');
+			this.clearKeepAlive();
 			this.handleDisconnect();
 			console.log('\u2705 (DISCONNECTED)');
 			this.connected = false;
@@ -153,7 +167,15 @@ export class PSConnection {
 		};
 	}
 
+	private clearKeepAlive() {
+		if (this.keepAliveInterval) {
+			clearInterval(this.keepAliveInterval);
+			this.keepAliveInterval = null;
+		}
+	}
+
 	private handleDisconnect() {
+		this.clearKeepAlive();
 		this.connected = false;
 		PS.isOffline = true;
 		this.socket = null;
