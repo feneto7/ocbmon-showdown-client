@@ -198,7 +198,7 @@ replayEmbedContents = replayEmbedContents.replace(/play\.pokemonshowdown\.com/g,
 process.stdout.write("and news... ");
 let stdout = '';
 let newsid = 1;
-let news = '<p><strong>Bem-vindo ao OCBmons Showdown!</strong></p><p>Servidor em desenvolvimento. Boas batalhas! 🎮</p>';
+let news = '<p><strong>Campeões dos Torneios OCB</strong></p><p>Aqui ficará o nome dos campeões dos torneios OCB.</p><ul></ul>';
 try {
 	stdout = child_process.execSync('php ' + path.resolve(thisDir, 'news-embed.php'), {
 		stdio: 'pipe',
