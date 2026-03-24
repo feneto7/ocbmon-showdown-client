@@ -197,8 +197,8 @@ replayEmbedContents = replayEmbedContents.replace(/play\.pokemonshowdown\.com/g,
 // add news, only if it's actually likely to exist
 process.stdout.write("and news... ");
 let stdout = '';
-let newsid = 0;
-let news = '[failed to retrieve news]';
+let newsid = 1;
+let news = '<p><strong>Bem-vindo ao OCBmons Showdown!</strong></p><p>Servidor em desenvolvimento. Boas batalhas! 🎮</p>';
 try {
 	stdout = child_process.execSync('php ' + path.resolve(thisDir, 'news-embed.php'), {
 		stdio: 'pipe',
