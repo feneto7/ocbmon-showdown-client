@@ -61,6 +61,24 @@ process.stdout.write("Loading gen 6 data... ");
 Dex.includeData();
 console.log("DONE");
 
+// Merge mod-only species from gen9ocb into base Dex data so they appear in all generated files
+try {
+	const modPokedexPath = path.join(serverRoot, 'dist/data/mods/gen9ocb/pokedex.js');
+	if (fs.existsSync(modPokedexPath)) {
+		const modPokedex = require(modPokedexPath).Pokedex;
+		let added = 0;
+		for (const id in modPokedex) {
+			if (!Dex.data.Pokedex[id]) {
+				Dex.data.Pokedex[id] = modPokedex[id];
+				added++;
+			}
+		}
+		if (added > 0) console.log(`Merged ${added} mod-only species from gen9ocb into base Dex.`);
+	}
+} catch (e) {
+	console.log('(WARNING: could not load gen9ocb mod pokedex: ' + e.message + ')');
+}
+
 function es3stringify(obj) {
 	const buf = JSON.stringify(obj);
 	return buf.replace(/"([A-Za-z][A-Za-z0-9]*)":/g, (fullMatch, key) => (
@@ -231,11 +249,11 @@ function requireNoCache(pathSpec) {
 		const id = entry[0];
 		let name = '';
 		switch (entry[1]) {
-		case 'pokemon': name = Dex.species.get(id).name; break;
-		case 'move': name = Dex.moves.get(id).name; break;
-		case 'item': name = Dex.items.get(id).name; break;
-		case 'ability': name = Dex.abilities.get(id).name; break;
-		case 'article': name = BattleArticleTitles[id] || ''; break;
+			case 'pokemon': name = Dex.species.get(id).name; break;
+			case 'move': name = Dex.moves.get(id).name; break;
+			case 'item': name = Dex.items.get(id).name; break;
+			case 'ability': name = Dex.abilities.get(id).name; break;
+			case 'article': name = BattleArticleTitles[id] || ''; break;
 		}
 		let res = '';
 		let nonAlnum = 0;
